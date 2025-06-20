@@ -35,7 +35,21 @@ public:
 		x = valueX;
 		y = valueY;
 		cout << this << " constr" << endl;
+	}
 
+	bool operator == (const Point& other) {
+		return this->x == other.x && this->y == other.y;
+	}
+
+	bool operator != (const Point& other) {
+		return !(this->x == other.x && this->y == other.y);
+	}
+
+	Point operator +(const Point& other) {
+		Point temp;
+		temp.x = this->x + other.x;
+		temp.y = this->y + other.y;
+		return temp;
 	}
 
 	int GetX() {
@@ -134,10 +148,13 @@ MyClass Foo2() {
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	MyClass a(10);
-	MyClass b(a);
-	//Foo(a);
+	/*MyClass a(10);
+	MyClass b(a);*/
 
+	Point a(5, 1);
+	Point b(77, 12);
+
+	Point c = a + b;
 
 
 	return 0;

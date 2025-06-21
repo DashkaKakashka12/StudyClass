@@ -4,12 +4,12 @@ using namespace std;
 
 class Human {
 
-public:
+public: //нарушение инкапсуляции: объявление полей побличными
 	int age;
 	int weight;
 	string name;
 
-	void Print() {
+	void Print() { //используется для вывода установленных значений
 		age += 5;
 		cout << age << endl;
 		cout << weight << endl;
@@ -25,60 +25,60 @@ private:
 
 public:
 
-	Point() {
+	Point() { //улучшенный конструктор по умолчанию. в данном случае устанавливает 0 в значание переменной
 		x = 0;
 		y = 0;
 		cout << this << " constr" << endl;
 	}
 
-	Point(int valueX, int valueY) {
+	Point(int valueX, int valueY) { //конструктор с параметрами. принимает значения для установки в переменную изначально.
 		x = valueX;
 		y = valueY;
 		cout << this << " constr" << endl;
 	}
 
-	bool operator == (const Point& other) {
-		return this->x == other.x && this->y == other.y;
+	bool operator == (const Point& other) { // принимаем ссылку на другую пременную с которой сравниваем (чтобы видеть значиния)
+		return this->x == other.x && this->y == other.y; // возвращаем true когда все условия выполнились
 	}
 
-	bool operator != (const Point& other) {
-		return !(this->x == other.x && this->y == other.y);
+	bool operator != (const Point& other) {// принимаем ссылку на другую пременную с которой сравниваем (чтобы видеть значиния)
+		return !(this->x == other.x && this->y == other.y); //возвращаем true если условия не верны
 	}
 
-	Point operator -(const Point& other) {
-		Point temp;
-		temp.x = this->x - other.x;
+	Point operator -(const Point& other) {// принимаем ссылку на другую пременную с которой сравниваем (чтобы видеть значиния). Объект возвращает звачение типа класса
+		Point temp; // временная переменная для хранения результата
+		temp.x = this->x - other.x; // наша переменная - другая по параметрам
 		temp.y = this->y - other.y;
-		return temp;
+		return temp; //возвращаем временную посчитанную переменную 
 	}
 
-	Point operator +(const Point& other) {
+	Point operator +(const Point& other) { //аналогично operator -
 		Point temp;
 		temp.x = this->x + other.x;
 		temp.y = this->y + other.y;
 		return temp;
 	}
 
-	Point operator *(const Point& other) {
+	Point operator *(const Point& other) {//аналогично operator -
 		Point temp;
 		temp.x = this->x * other.x;
 		temp.y = this->y * other.y;
 		return temp;
 	}
 
-	int GetX() {
+	int GetX() { //получаем значение установленное в переменной, никаких параметров не передаём. Функция возвращает переменную того же типа
 		return x;
 	}
 
-	void SetX(int valueX) {
+	void SetX(int valueX) { //передаём в функцию значение которое и устанавливается в переменную. Функция ничего не возыращает
 		x = valueX;
 	}
 
-	int GetY() {
+	int GetY() {//аналогично GetX()
 		return y;
 	}
 
-	void SetY(int y) {
+	void SetY(int y) { //аналогично SetX()
 		this->y = y;
 	}
 
@@ -86,18 +86,40 @@ public:
 		cout << "x = " << x << endl;
 		cout << "y = " << y << endl << endl;
 	}
+
+	Point& operator ++() {  // инкремент префиксный (до переменной ++a)
+		this->x++;
+		this->y += 1;
+
+		return* this;
+	}
+
+	Point& operator --() { // декремент префиксный (до переменной ++a)
+		this->x--;
+		this->y--;
+
+		return*this;
+	}
+
+	Point& operator ++(int value) { // декремент постфиксный (после переменной a++). Параметр передаём только для того чтобф компилятор видел разницу
+		Point temp(*this); // храним значение во временной переменной чтобы увеличить сразу только его
+		this->x++;
+		this->y++;
+
+		return temp;
+	}
 };
 
 class CoffeGrinder {
 private:
-	bool ChekVoltage() {
+	bool ChekVoltage() { // метод для проверки напряжения, напряжение либо есть либо нет(поэтому булевый)
 		return true;
 	}
 
 
 public:
 	void Start() {
-		if (ChekVoltage())
+		if (ChekVoltage()) //в зависимости от результата булевого метода выполняет определённое действие
 		{
 			cout << "Вжуууух" << endl;
 		}
@@ -158,6 +180,18 @@ MyClass Foo2() {
 	return temp;
 }
 
+class TestClass
+{
+public:
+	int& operator[](int index) { //принимает номер ячейки данные которой нам нужны
+		return arr[index]; //возвращает значение лежащие в ячейке
+	}
+
+private:
+	int arr[5] = {1,2,3,4,5 };
+};
+
+
 
 int main() {
 	setlocale(LC_ALL, "RU");
@@ -165,10 +199,15 @@ int main() {
 	/*MyClass a(10);
 	MyClass b(a);*/
 
-	Point a(5, 4);
-	Point b(2, 3);
+	//Point a(1, 1);
+	//Point b = a++;
+	//++a;
+	//Point c = a * b;
 
-	Point c = a * b;
+
+	TestClass a;
+	cout << a[2] << endl;
+	
 
 
 	return 0;

@@ -45,10 +45,24 @@ public:
 		return !(this->x == other.x && this->y == other.y);
 	}
 
+	Point operator -(const Point& other) {
+		Point temp;
+		temp.x = this->x - other.x;
+		temp.y = this->y - other.y;
+		return temp;
+	}
+
 	Point operator +(const Point& other) {
 		Point temp;
 		temp.x = this->x + other.x;
 		temp.y = this->y + other.y;
+		return temp;
+	}
+
+	Point operator *(const Point& other) {
+		Point temp;
+		temp.x = this->x * other.x;
+		temp.y = this->y * other.y;
 		return temp;
 	}
 
@@ -151,10 +165,10 @@ int main() {
 	/*MyClass a(10);
 	MyClass b(a);*/
 
-	Point a(5, 1);
-	Point b(77, 12);
+	Point a(5, 4);
+	Point b(2, 3);
 
-	Point c = a + b;
+	Point c = a * b;
 
 
 	return 0;

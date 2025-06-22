@@ -2,6 +2,10 @@
 
 using namespace std;
 
+class TestClass;
+class Apple; 
+class HumanTakeApple;
+
 class Human {
 
 public: //нарушение инкапсуляции: объявление полей побличными
@@ -16,8 +20,6 @@ public: //нарушение инкапсуляции: объявление по
 		cout << name << endl;
 	}
 };
-
-class TestClass;
 
 
 class Point {
@@ -218,6 +220,31 @@ void Metody::Print() {
 	cout << "Сообщение" << endl;
 }
 
+class HumanTakeApple {
+public:
+	void TakeApple(Apple& apple);
+	
+	
+	
+
+};
+
+
+
+
+class Apple {
+private:
+	int weight;
+	string color;
+
+	friend void HumanTakeApple::TakeApple (Apple& apple);
+public:
+	Apple(int weight, string color) {
+		this->color = color;
+		this->weight = weight;
+	}
+};
+
 
 
 int main() {
@@ -241,8 +268,19 @@ int main() {
 	chengeX(a, test);
 	a.Print();*/
 
-	Metody a;
-	a.Print();
+	//Metody a;
+	//a.Print();
+
+	Apple apple(150, "Red");
+	HumanTakeApple human;
+	human.TakeApple(apple);
+
 
 	return 0;
+}
+
+void HumanTakeApple::TakeApple(Apple& apple)
+{
+	cout << "TakeApple:" << endl << "weight: " << apple.weight << "\ncolor:" << apple.color << endl;
+
 }

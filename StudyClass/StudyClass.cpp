@@ -17,6 +17,8 @@ public: //нарушение инкапсуляции: объявление по
 	}
 };
 
+class TestClass;
+
 
 class Point {
 private:
@@ -108,7 +110,29 @@ public:
 
 		return temp;
 	}
+
+	friend void chengeX(Point& value, TestClass& testValue); //дружественная функция получает доступ к приватным полям класса. не является членом класса
 };
+
+class TestClass {
+public:
+	int& operator[](int index) { //принимает номер ячейки данные которой нам нужны
+		return arr[index]; //возвращает значение лежащие в ячейке
+	}
+
+	friend void chengeX(Point& value, TestClass& testValue);
+
+private:
+	int arr[5] = { 1,2,3,4,5 };
+	int data = 0;
+};
+
+void chengeX(Point& value, TestClass& testValue) { //не является членом класса поэтому this не работатет. Может быть дружественной к нескольким классам
+	value.x = -1;
+	testValue.data = 99;
+
+}
+
 
 class CoffeGrinder {
 private:
@@ -169,7 +193,7 @@ public:
 
 
 void Foo(MyClass value) {
-	cout << "Вызвалась функция Foo" << endl;
+	cout << "Вызвалась функция Foo" << endl; 
 }
 
 MyClass Foo2() {
@@ -180,16 +204,19 @@ MyClass Foo2() {
 	return temp;
 }
 
-class TestClass
+class Metody
 {
 public:
-	int& operator[](int index) { //принимает номер ячейки данные которой нам нужны
-		return arr[index]; //возвращает значение лежащие в ячейке
-	}
+	
+	void Print();
 
 private:
-	int arr[5] = {1,2,3,4,5 };
+
 };
+
+void Metody::Print() {
+	cout << "Сообщение" << endl;
+}
 
 
 
@@ -199,16 +226,23 @@ int main() {
 	/*MyClass a(10);
 	MyClass b(a);*/
 
-	//Point a(1, 1);
-	//Point b = a++;
-	//++a;
-	//Point c = a * b;
+	/*Point a(1, 1);
+	Point b = a++;
+	++a;
+	Point c = a * b;*/
 
 
-	TestClass a;
-	cout << a[2] << endl;
+	/*TestClass a;
+	cout << a[2] << endl;*/
 	
+	/*TestClass test;
+	Point a(5, 12);
+	a.Print();
+	chengeX(a, test);
+	a.Print();*/
 
+	Metody a;
+	a.Print();
 
 	return 0;
 }

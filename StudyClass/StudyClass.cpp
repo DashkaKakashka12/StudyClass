@@ -223,28 +223,38 @@ void Metody::Print() {
 class HumanTakeApple {
 public:
 	void TakeApple(Apple& apple);
-	
-	
-	
 
+	void EatApple(Apple& apple) {
+		
+	}
 };
 
-
-
-
 class Apple {
+
+	friend HumanTakeApple; //дружественный класс
 private:
 	int weight;
 	string color;
 
-	friend void HumanTakeApple::TakeApple (Apple& apple);
+	//friend void HumanTakeApple::TakeApple (Apple& apple); //дружественный метод
 public:
+
+	static int count;
+
 	Apple(int weight, string color) {
 		this->color = color;
 		this->weight = weight;
+		count++;
 	}
+
 };
 
+int Apple::count = 0;
+
+void HumanTakeApple::TakeApple(Apple& apple)
+{
+	cout << "TakeApple:" << endl << "weight: " << apple.weight << "\ncolor:" << apple.color<< endl << endl;
+}
 
 
 int main() {
@@ -274,13 +284,9 @@ int main() {
 	Apple apple(150, "Red");
 	HumanTakeApple human;
 	human.TakeApple(apple);
-
+	Apple apple2(50, "Green");
+	//cout << "\ncountAllApple:" << apple.count << endl;
+	//cout << Apple::count;
 
 	return 0;
-}
-
-void HumanTakeApple::TakeApple(Apple& apple)
-{
-	cout << "TakeApple:" << endl << "weight: " << apple.weight << "\ncolor:" << apple.color << endl;
-
 }

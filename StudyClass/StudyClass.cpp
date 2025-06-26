@@ -271,35 +271,42 @@ void HumanTakeApple::TakeApple(Apple& apple)
 	cout << "TakeApple: " << apple.name << endl << "weight: " << apple.weight << "\ncolor:" << apple.color<< endl << endl;
 }
 
-class Image {
+
+class Pixel {
+private:
+	int r;
+	int g;
+	int b;
+
+
 public:
 
+	Pixel() {
+		r = g = b = 0;
+	}
+	Pixel(int r, int g, int b) {
+		this->r = r;
+		this->g = g;
+		this->b = b;
+	}
+	string GetPixelInfo() {
+		return "Pixel: r=" + to_string(r) + " g= " + to_string(g) + " b= " + to_string(b);
+	}
+};
+
+
+class Image {
+public:
 	void GetImageInfo() {
 		for (int i = 0; i < lenght; i++)
 		{
-			cout << pixels[i].Get() << endl;
+			cout << pixels[i].GetPixelInfo() << endl;
 		}
 	}
 
+
+
 private:
-
-	class Pixel {
-	private:
-		int r;
-		int g;
-		int b;
-
-
-	public:
-		Pixel(int r, int g, int b) {
-			this->r = r;
-			this->g = g;
-			this->b = b;
-		}
-		string Get() {
-			return "Pixel: r=" + to_string(r) + " g= " + to_string(g) + " b= " + to_string(b);
-		}
-	};
 
 	static const int lenght = 5;
 	Pixel pixels[lenght]{
@@ -310,6 +317,9 @@ private:
 		Pixel(111, 179, 64),
 	};
 };
+
+
+
 
 
 int main() {
@@ -348,9 +358,16 @@ int main() {
 	cout << Apple::GetCount();*/
 	//cout << "\ncountAllApple:" << apple.GetCount << endl;
 
+	const int lenght = 5;
+	
+	Pixel arr[lenght];
 
-	Image pic;
-	pic.GetImageInfo();
+	cout << arr[0].GetPixelInfo() << endl;
+	arr[0] = Pixel(1, 1, 1);
+	cout << arr[0].GetPixelInfo() << endl;
+
+	//Image pic;
+	//pic.GetImageInfo();
 
 	return 0;
 }

@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -230,21 +231,35 @@ public:
 };
 
 class Apple {
-
 	friend HumanTakeApple; //дружественный класс
 private:
 	int weight;
 	string color;
+	string name;
+	int id;
+	static int count;
 
 	//friend void HumanTakeApple::TakeApple (Apple& apple); //дружественный метод
 public:
-
-	static int count;
-
-	Apple(int weight, string color) {
+	
+	Apple(int weight, string color, string name) {
 		this->color = color;
 		this->weight = weight;
+		this->name = name;
 		count++;
+		id = count; // оригинальные id равные количеству по созданию
+	}
+
+	int GetId() {
+		return id;
+	}
+
+	static int GetCount() { //статичный метод доступен всем, но ему не доступны нестатичные параметры
+		return count;
+	}
+
+	static void changeColor(Apple& apple, string color) {//статичный метод доступен всем, и ему доступны нестатичные параметры благодаря ссылке
+		apple.color = color;
 	}
 
 };
@@ -253,8 +268,48 @@ int Apple::count = 0;
 
 void HumanTakeApple::TakeApple(Apple& apple)
 {
-	cout << "TakeApple:" << endl << "weight: " << apple.weight << "\ncolor:" << apple.color<< endl << endl;
+	cout << "TakeApple: " << apple.name << endl << "weight: " << apple.weight << "\ncolor:" << apple.color<< endl << endl;
 }
+
+class Image {
+public:
+
+	void GetImageInfo() {
+		for (int i = 0; i < lenght; i++)
+		{
+			cout << pixels[i].Get() << endl;
+		}
+	}
+
+private:
+
+	class Pixel {
+	private:
+		int r;
+		int g;
+		int b;
+
+
+	public:
+		Pixel(int r, int g, int b) {
+			this->r = r;
+			this->g = g;
+			this->b = b;
+		}
+		string Get() {
+			return "Pixel: r=" + to_string(r) + " g= " + to_string(g) + " b= " + to_string(b);
+		}
+	};
+
+	static const int lenght = 5;
+	Pixel pixels[lenght]{
+		Pixel(0, 4, 64),
+		Pixel(4, 14, 10),
+		Pixel(111, 4, 24),
+		Pixel(244, 244, 14),
+		Pixel(111, 179, 64),
+	};
+};
 
 
 int main() {
@@ -281,12 +336,21 @@ int main() {
 	//Metody a;
 	//a.Print();
 
-	Apple apple(150, "Red");
+	/*Apple apple(150, "Red", "first");
 	HumanTakeApple human;
 	human.TakeApple(apple);
+	Apple::changeColor(apple, "Gren");
+	human.TakeApple(apple);*/
+
+	/*HumanTakeApple human;
+	human.TakeApple(apple);
 	Apple apple2(50, "Green");
-	//cout << "\ncountAllApple:" << apple.count << endl;
-	//cout << Apple::count;
+	cout << Apple::GetCount();*/
+	//cout << "\ncountAllApple:" << apple.GetCount << endl;
+
+
+	Image pic;
+	pic.GetImageInfo();
 
 	return 0;
 }

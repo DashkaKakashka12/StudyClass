@@ -7,6 +7,24 @@ class TestClass;
 class Apple; 
 class HumanTakeApple;
 
+class Cap { //пример АГРЕГАЦИИ. класс не зависит от Human
+private:
+	string color = "Red";
+public:
+	string Get() {
+		return color;
+	}
+};
+
+class Model {
+private:
+	Cap cap;
+public:
+	void LookModel() {
+		cout << "Кепка модели " << cap.Get() << " цвета" << endl;
+	}
+};
+
 class Human {
 
 public: //нарушение инкапсуляции: объявление полей побличными
@@ -20,6 +38,27 @@ public: //нарушение инкапсуляции: объявление по
 		cout << weight << endl;
 		cout << name << endl;
 	}
+
+	void Think() {
+		brain.Think();//деллигирование (патерн проектирования)
+	}
+
+	void LookForCap(){
+		cout << "Моя кепка " << cap.Get() << " цвета" << endl;
+	}
+
+private:
+	
+
+	class Brain { // т.к. класс описан в private секции класса Human он служит только ему и вне/без него использоваться не может
+	public:		// пример КОМПОЗИЦИИ, жёсткая привязка класса к другому
+		void Think() {
+			cout << "Я думаю" << endl;
+		}
+	};
+
+	Brain brain;
+	Cap cap;
 };
 
 
@@ -318,12 +357,15 @@ private:
 	};
 };
 
-
-
-
-
 int main() {
 	setlocale(LC_ALL, "RU");
+
+
+	/*Human human;
+	human.Think();
+	human.LookForCap();
+	Model model;
+	model.LookModel();*/
 
 	/*MyClass a(10);
 	MyClass b(a);*/
@@ -358,16 +400,14 @@ int main() {
 	cout << Apple::GetCount();*/
 	//cout << "\ncountAllApple:" << apple.GetCount << endl;
 
-	const int lenght = 5;
-	
-	Pixel arr[lenght];
-
-	cout << arr[0].GetPixelInfo() << endl;
-	arr[0] = Pixel(1, 1, 1);
-	cout << arr[0].GetPixelInfo() << endl;
-
+	//const int lenght = 5;
+	//Pixel arr[lenght];
+	//cout << arr[0].GetPixelInfo() << endl;
+	//arr[0] = Pixel(1, 1, 1);
+	//cout << arr[0].GetPixelInfo() << endl;
 	//Image pic;
 	//pic.GetImageInfo();
+
 
 	return 0;
 }

@@ -70,7 +70,7 @@ private:
 	string k;
 public:
 
-	B(string k): A(k) {
+	B(string k): A(k) { //B(): A("Наше сообщение")
 		
 	}
 
@@ -87,12 +87,11 @@ public:
 //	}
 //};
 
+ 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	A a("dsvf");
-	a.Print();
 
 	B b("haha");
 	b.Print();

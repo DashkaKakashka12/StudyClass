@@ -40,29 +40,66 @@ public:
 };
 
 class A {
-public:
-	string msg1 = "Сообщение 1";//можем обратиться везде, даже от объектов
 private:
-	string msg2 = "Сообщение 2"; //недоступны вне самого класса даже наследникам
-protected:
-	string msg3 = "Сообщение 3"; //доступны наследникам и самому классу, но не объектам
+	string msg;
+public:
+
+	A() {
+		msg = "пустое сообщение";
+
+	}
+
+	A(string msg) {
+		this->msg = msg;
+
+	}
+
+	void Print() {
+		cout << msg << endl;
+	}
+
+//	string msg1 = "Сообщение 1";//можем обратиться везде, даже от объектов
+//private:
+//	string msg2 = "Сообщение 2"; //недоступны вне самого класса даже наследникам
+//protected:
+//	string msg3 = "Сообщение 3"; //доступны наследникам и самому классу, но не объектам
 };
 
 class B: public A { //public модификатор не меняетмодификаторов родителя. private-> все поля приватными. protected  public->protected 
+private:
+	string k;
 public:
-	void PrintMsg() {
+
+	B(string k): A(k) {
 		
-		cout << msg1 << endl;
 	}
+
 };
+
+//class C: public B{ //класс выхывает кострукторы всех от прабабушки родителей, а потом свой. A->B->C
+//public:			//С деструкторами наоборот. сначала уничножаются дочерний, потом родительские С->B->A
+//	C() {
+//		cout << "Вызвался конструктор класса C" << endl;
+//	}
+//
+//	~C() {
+//		cout << "Вызвался деструктор класса C" << endl;
+//	}
+//};
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
+	A a("dsvf");
+	a.Print();
 
-	B b;
-	b.PrintMsg();
+	B b("haha");
+	b.Print();
+
+
+	/*B b;
+	b.PrintMsg();*/
 
 	/*Student st;
 	st.Learn();

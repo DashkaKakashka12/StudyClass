@@ -3,114 +3,95 @@
 
 using namespace std;
 
-class Human {
+class Weapon {	//класс в котором присутствует чисто виртуальная функция (пустая) называется абстрактным
+public:
+	virtual void Shoot() = 0; 	//экземпляры абстрактного класса компилятор не позволяет создавать
+	void Foo() {
+		cout << "Foo" << endl; //но если в классе есть не только абстрактный метод, то объекты наследники могут его вызвать
+	}						
+};
+
+class Gun: public Weapon {
 private:
-	string name = "Маша";
-public:
-	string GetName() {
-		return name;
-	}
 
-	void SetName(string name) {
-		this->name = name;
+public:		
+	void Shoot() override { //благодаря virtual в наследниках можем переопределить работу метода
+		cout << "Бам!!!" << endl;
 	}
 };
 
-class Student: public Human {
+class SubmachineGun: public Gun {
 public:
-	string group;
-
-	void Learn() {
-		cout << "Я учусь" << endl;
-	}
-
-};
-
-class ZaoStudent: public Student {
-public:
-	void Learn() {
-		cout << "Я бываю в унике 1 в год" << endl;
+	void Shoot() override { //компилятор контролирует соответствие сигнатуры переопределяемого метода методу родителя
+		cout << "Бам! Бам! Бам!" << endl;
 	}
 };
 
-class Professor: public Human {
+class Bazooka: public Weapon {
 public:
-	string subject;
+	void Shoot() override { 
+		cout << "Барабам" << endl;
+	}
+};
 
+class Knife :public Weapon {
+public:
+	void Shoot() override {
+		cout << "хряк" << endl;
+	}
+};
+
+class Player {
+public:
+	void Shoot(Weapon* weapon) {
+		weapon->Shoot();
+	}
 };
 
 class A {
-private:
-	string msg;
 public:
-
 	A() {
-		msg = "пустое сообщение";
-
+		//cout << "Выделена динамическая память класса A" << endl;
 	}
 
-	A(string msg) {
-		this->msg = msg;
-
-	}
-
-	void Print() {
-		cout << msg << endl;
-	}
-
-//	string msg1 = "Сообщение 1";//можем обратиться везде, даже от объектов
-//private:
-//	string msg2 = "Сообщение 2"; //недоступны вне самого класса даже наследникам
-//protected:
-//	string msg3 = "Сообщение 3"; //доступны наследникам и самому классу, но не объектам
+	virtual ~A() = 0; //класс в котором объявлен чисто виртуальный деструктор становиться абьстрактным
+		//cout <<"Освобождена динамическая память класса A" << endl;
+	
 };
 
-class B: public A { //public модификатор не меняетмодификаторов родителя. private-> все поля приватными. protected  public->protected 
-private:
-	string k;
+A::~A() {}; //чтобы компилятор не ругался ибо он дурак
+
+class B: public A {
 public:
-
-	B(string k): A(k) { //B(): A("Наше сообщение")
-		
+	B() {
+		//cout << "Выделена динамическая память класса B" << endl;
 	}
 
+	~B() override {
+		//cout << "Освобождена динамическая память класса B" << endl;
+	}
 };
 
-//class C: public B{ //класс выхывает кострукторы всех от прабабушки родителей, а потом свой. A->B->C
-//public:			//С деструкторами наоборот. сначала уничножаются дочерний, потом родительские С->B->A
-//	C() {
-//		cout << "Вызвался конструктор класса C" << endl;
-//	}
-//
-//	~C() {
-//		cout << "Вызвался деструктор класса C" << endl;
-//	}
-//};
-
- 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
+	/*A *bptr = new B;
+	delete bptr;*/
 
-	B b("haha");
-	b.Print();
 
+	//Gun gun;
+	//SubmachineGun  machineGun;
+	
+	//Gun* weapon = &gun; //указатель бюазового класса может указывать на обьект наследника
+	//weapon->Shoot();
+	
 
-	/*B b;
-	b.PrintMsg();*/
-
-	/*Student st;
-	st.Learn();
-
-	ZaoStudent zaoSt;
-	zaoSt.Learn();
-
-	cout << st.GetName() << endl;
-	st.SetName("Саша");
-	cout<< st.GetName() << endl;
-	cout << "----" << endl;
-	cout<< zaoSt.GetName() << endl;*/
+	//Player player;
+	////Bazooka bazooka;
+	//Knife knife;
+	//player.Shoot(&knife); //полиморфизм -- возможность использования одного и того же метода(Shoot) разными классами с разной реализацией(переопределение)
+	//knife.Foo();
 
 
 	return 0;

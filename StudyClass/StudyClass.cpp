@@ -4,68 +4,79 @@
 using namespace std;
 
 
-class Human {
-private: 
-	string name;
-	int weight;
-	int age;
-public:
-	Human(string name) {
-		this->name = name;
-		this->age = 0;
-		this->weight = 0;
-	}
-
-	Human(string name, int age):Human(name) { //сначала отрабатывает Human(name), потом с двумя параметрами
-		this->age = age;
-	}
-
-	Human(string name, int age, int weight):Human(name,age) { //помогает не дублироватьинициализацию, делегируем присваивание полей другим конструкторам
-		this->weight = weight;
-	}
-};
-
-
-class Msg{
-private:
-	string msg;
-public:
-	Msg(string msg) {
-		this->msg = msg;
-	}
-
-	virtual string GetMsg() {
-		return msg;
-	}
-};
-
-class BracketsMsg : public Msg {
-public:
-	BracketsMsg(string msg) : Msg(msg) {
-
-	}
-	string GetMsg() override {
-		return "{ " + Msg::GetMsg() + " }"; //без ::Msg:: вызывается GetMsg() у BracketsMsg(рекурсия надо явно указать что этот метод вызываем у базового класса)
-	}
-};
-
-class Printer {
+class Car {
 private:
 
 public:
-	void Print(Msg* msg) {
-		cout << msg->GetMsg() << endl;
+	Car()
+	{
+		cout << "вызвался конструктор класса Car" << endl;
+
+	}
+	string str = "Поле класса машина";
+	void Use() {
+		cout << "Я еду" << endl;
+	}
+	~Car()
+	{
+		cout << "вызвался деструктор класса Car" << endl;
+
+	}
+
+};
+
+
+class Airplain {
+private:
+
+public:
+	Airplain()
+	{
+		cout << "вызвался конструктор класса Airplain" << endl;
+
+	}
+	string str2 = "Поле класса Airplain";
+
+	void Use() {
+		cout << "Я лечу" << endl;
+	}
+
+	~Airplain()
+	{
+		cout << "вызвался конструктор деструктор Airplain" << endl;
+
+	}
+};
+
+class FlingGar: public Car, public Airplain { //синтаксис множественного наследования
+private:
+
+public:
+	FlingGar()
+	{
+		cout << "вызвался конструктор класса FlingGar" << endl; // вызов конструкторов происходит по порядку прописанному при наследовании (Car -> Airplain -> FlingGar)
+	}
+
+	~FlingGar()
+	{
+		cout << "вызвался деструктор класса FlingGar" << endl; //вызов деструкторов происходит в обратном порядке создания (разрушаются FlingGar->Airplain->Car)  
 	}
 
 };
 
 int main() {
 	setlocale(LC_ALL, "RU");
-
-	BracketsMsg m("Привет");
-	Printer p;
-	p.Print(&m);
 	
+	FlingGar FC;
+	//FC.Use(); нельзя вызвать неоднозначный метод(если методы в базовах классах называются одинакого среда разработки скажет об этом)
+	FC.Car::Use();  //синтаксис при неодназначном методе
+	cout << endl << endl;
+	/*cout << FC.str2;
+	FC.Fly();
+	FC.Drive();*/
+
+	/*Car* ptrC = &FC;
+	Airplain* ptrA = &FC;*/
 
 	return 0;
 }

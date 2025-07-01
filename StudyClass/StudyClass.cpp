@@ -3,96 +3,69 @@
 
 using namespace std;
 
-class Weapon {	//класс в котором присутствует чисто виртуальная функция (пустая) называется абстрактным
+
+class Human {
+private: 
+	string name;
+	int weight;
+	int age;
 public:
-	virtual void Shoot() = 0; 	//экземпляры абстрактного класса компилятор не позволяет создавать
-	void Foo() {
-		cout << "Foo" << endl; //но если в классе есть не только абстрактный метод, то объекты наследники могут его вызвать
-	}						
+	Human(string name) {
+		this->name = name;
+		this->age = 0;
+		this->weight = 0;
+	}
+
+	Human(string name, int age):Human(name) { //сначала отрабатывает Human(name), потом с двумя параметрами
+		this->age = age;
+	}
+
+	Human(string name, int age, int weight):Human(name,age) { //помогает не дублироватьинициализацию, делегируем присваивание полей другим конструкторам
+		this->weight = weight;
+	}
 };
 
-class Gun: public Weapon {
+
+class Msg{
+private:
+	string msg;
+public:
+	Msg(string msg) {
+		this->msg = msg;
+	}
+
+	virtual string GetMsg() {
+		return msg;
+	}
+};
+
+class BracketsMsg : public Msg {
+public:
+	BracketsMsg(string msg) : Msg(msg) {
+
+	}
+	string GetMsg() override {
+		return "{ " + Msg::GetMsg() + " }"; //без ::Msg:: вызывается GetMsg() у BracketsMsg(рекурсия надо явно указать что этот метод вызываем у базового класса)
+	}
+};
+
+class Printer {
 private:
 
-public:		
-	void Shoot() override { //благодаря virtual в наследниках можем переопределить работу метода
-		cout << "Бам!!!" << endl;
-	}
-};
-
-class SubmachineGun: public Gun {
 public:
-	void Shoot() override { //компилятор контролирует соответствие сигнатуры переопределяемого метода методу родителя
-		cout << "Бам! Бам! Бам!" << endl;
+	void Print(Msg* msg) {
+		cout << msg->GetMsg() << endl;
 	}
+
 };
-
-class Bazooka: public Weapon {
-public:
-	void Shoot() override { 
-		cout << "Барабам" << endl;
-	}
-};
-
-class Knife :public Weapon {
-public:
-	void Shoot() override {
-		cout << "хряк" << endl;
-	}
-};
-
-class Player {
-public:
-	void Shoot(Weapon* weapon) {
-		weapon->Shoot();
-	}
-};
-
-class A {
-public:
-	A() {
-		//cout << "Выделена динамическая память класса A" << endl;
-	}
-
-	virtual ~A() = 0; //класс в котором объявлен чисто виртуальный деструктор становиться абьстрактным
-		//cout <<"Освобождена динамическая память класса A" << endl;
-	
-};
-
-A::~A() {}; //чтобы компилятор не ругался ибо он дурак
-
-class B: public A {
-public:
-	B() {
-		//cout << "Выделена динамическая память класса B" << endl;
-	}
-
-	~B() override {
-		//cout << "Освобождена динамическая память класса B" << endl;
-	}
-};
-
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	/*A *bptr = new B;
-	delete bptr;*/
-
-
-	//Gun gun;
-	//SubmachineGun  machineGun;
+	BracketsMsg m("Привет");
+	Printer p;
+	p.Print(&m);
 	
-	//Gun* weapon = &gun; //указатель бюазового класса может указывать на обьект наследника
-	//weapon->Shoot();
-	
-
-	//Player player;
-	////Bazooka bazooka;
-	//Knife knife;
-	//player.Shoot(&knife); //полиморфизм -- возможность использования одного и того же метода(Shoot) разными классами с разной реализацией(переопределение)
-	//knife.Foo();
-
 
 	return 0;
 }

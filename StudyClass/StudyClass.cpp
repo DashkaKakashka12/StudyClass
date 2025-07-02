@@ -3,58 +3,44 @@
 
 using namespace std;
 
-__interface IBicycle{ //интерфейс по факту это абстрактный класс с виртуальным методами. можно использовать ключевое слово, а так же просто class. У интерфейса только public секция
-public: // Если не указывать модификатор доступа для метода в интерфейсе, он автоматически считается публичны 
-	void virtual EwistTheWell() = 0; //крутить руль
-	void virtual Ride() = 0; //ехать
+class Component {
+public:
+	string companyNamy;
+
+	Component() {
+		cout << "конструктор Component" << endl;
+	}
 
 };
 
-class Human {
-private:
+class GPU : public virtual Component {
 public:
-	void RideOn(IBicycle& bicycle) {
-		cout << "крутим руль" << endl;
-		bicycle.EwistTheWell();		//вызываем метод через ссылку на объект интерфейса
-		cout << "Поехали!" << endl;
-		bicycle.Ride();
+	GPU(string companyNamy) : Component() { //Component — виртуальный базовый класс. Виртуальные базовые классы не инициализируются в промежуточных классах. Классы наследники не владеют собственной отдельной копией Component 
 
+
+		cout << "конструктор GPU" << endl;
 	}
 };
 
-class SympleBicycle: public IBicycle {
-private:
 
+class Memory : public virtual Component {
 public:
-	void EwistTheWell() override {  //реализовываем интерфейс
-		cout << "Метод EwistTheWell у SympleBicycle " << endl;
-	} 
-
-	void Ride() override {
-		cout << "Метод Ride у SympleBicycle " << endl;
-	} 
+	Memory(string companyNamy) : Component() { //конструктор Component не вызывается, но Memory имеет доступ к членам Component
+		cout << "конструктор Memory" << endl;
+	}
 };
 
-
-class SportBicycle: public IBicycle {
-private:
-
+class GraphicCard : public GPU, public Memory { //только тут вызывается Component() именно при создании GraphicCard
 public:
-	void EwistTheWell() override { 
-		cout << "Метод EwistTheWell у SportBicycle " << endl;
-	}
-
-	void Ride() override {
-		cout << "Метод Ride у SportBicycle " << endl;
+	GraphicCard(string GPUcompanyNamy, string MemorycompanyNamy): GPU(GPUcompanyNamy), Memory(MemorycompanyNamy) {
+		cout << "конструктор GraphicCard" << endl;
 	}
 };
 
 int main() {
 	setlocale(LC_ALL, "RU");
-	Human h;
-	SympleBicycle sb;
-	SportBicycle sportB;
-	h.RideOn(sportB);
+	
+	GraphicCard g("AMD", "Samsung");
 
 
 

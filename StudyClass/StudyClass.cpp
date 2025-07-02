@@ -3,80 +3,60 @@
 
 using namespace std;
 
-
-class Car {
-private:
-
-public:
-	Car()
-	{
-		cout << "вызвался конструктор класса Car" << endl;
-
-	}
-	string str = "Поле класса машина";
-	void Use() {
-		cout << "Я еду" << endl;
-	}
-	~Car()
-	{
-		cout << "вызвался деструктор класса Car" << endl;
-
-	}
+__interface IBicycle{ //интерфейс по факту это абстрактный класс с виртуальным методами. можно использовать ключевое слово, а так же просто class. У интерфейса только public секция
+public: // Если не указывать модификатор доступа для метода в интерфейсе, он автоматически считается публичны 
+	void virtual EwistTheWell() = 0; //крутить руль
+	void virtual Ride() = 0; //ехать
 
 };
 
-
-class Airplain {
+class Human {
 private:
-
 public:
-	Airplain()
-	{
-		cout << "вызвался конструктор класса Airplain" << endl;
-
-	}
-	string str2 = "Поле класса Airplain";
-
-	void Use() {
-		cout << "Я лечу" << endl;
-	}
-
-	~Airplain()
-	{
-		cout << "вызвался конструктор деструктор Airplain" << endl;
+	void RideOn(IBicycle& bicycle) {
+		cout << "крутим руль" << endl;
+		bicycle.EwistTheWell();		//вызываем метод через ссылку на объект интерфейса
+		cout << "Поехали!" << endl;
+		bicycle.Ride();
 
 	}
 };
 
-class FlingGar: public Car, public Airplain { //синтаксис множественного наследования
+class SympleBicycle: public IBicycle {
 private:
 
 public:
-	FlingGar()
-	{
-		cout << "вызвался конструктор класса FlingGar" << endl; // вызов конструкторов происходит по порядку прописанному при наследовании (Car -> Airplain -> FlingGar)
+	void EwistTheWell() override {  //реализовываем интерфейс
+		cout << "Метод EwistTheWell у SympleBicycle " << endl;
+	} 
+
+	void Ride() override {
+		cout << "Метод Ride у SympleBicycle " << endl;
+	} 
+};
+
+
+class SportBicycle: public IBicycle {
+private:
+
+public:
+	void EwistTheWell() override { 
+		cout << "Метод EwistTheWell у SportBicycle " << endl;
 	}
 
-	~FlingGar()
-	{
-		cout << "вызвался деструктор класса FlingGar" << endl; //вызов деструкторов происходит в обратном порядке создания (разрушаются FlingGar->Airplain->Car)  
+	void Ride() override {
+		cout << "Метод Ride у SportBicycle " << endl;
 	}
-
 };
 
 int main() {
 	setlocale(LC_ALL, "RU");
-	
-	FlingGar FC;
-	//FC.Use(); нельзя вызвать неоднозначный метод(если методы в базовах классах называются одинакого среда разработки скажет об этом)
-	FC.Car::Use();  //синтаксис при неодназначном методе
-	cout << endl << endl;
-	/*cout << FC.str2;
-	FC.Fly();
-	FC.Drive();*/
+	Human h;
+	SympleBicycle sb;
+	SportBicycle sportB;
+	h.RideOn(sportB);
 
-	/*Car* ptrC = &FC;
-	Airplain* ptrA = &FC;*/
+
 
 	return 0;
 }

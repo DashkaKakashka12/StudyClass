@@ -1,47 +1,76 @@
 ﻿#include <iostream>
 #include <string>
+#include <fstream>
+#include <windows.h>
 
 using namespace std;
 
-class Component {
-public:
-	string companyNamy;
+//fstream библиотека для чтение и запись одновременно
 
-	Component() {
-		cout << "конструктор Component" << endl;
-	}
+//ifstrim класс чтение записей из файла
+//ofstream класс сохранение записей в файл
 
-};
-
-class GPU : public virtual Component {
-public:
-	GPU(string companyNamy) : Component() { //Component — виртуальный базовый класс. Виртуальные базовые классы не инициализируются в промежуточных классах. Классы наследники не владеют собственной отдельной копией Component 
-
-
-		cout << "конструктор GPU" << endl;
-	}
-};
-
-
-class Memory : public virtual Component {
-public:
-	Memory(string companyNamy) : Component() { //конструктор Component не вызывается, но Memory имеет доступ к членам Component
-		cout << "конструктор Memory" << endl;
-	}
-};
-
-class GraphicCard : public GPU, public Memory { //только тут вызывается Component() именно при создании GraphicCard
-public:
-	GraphicCard(string GPUcompanyNamy, string MemorycompanyNamy): GPU(GPUcompanyNamy), Memory(MemorycompanyNamy) {
-		cout << "конструктор GraphicCard" << endl;
-	}
-};
 
 int main() {
 	setlocale(LC_ALL, "RU");
 	
-	GraphicCard g("AMD", "Samsung");
+	//!ВАЖНО. Файл должен быть сохранён в кодировке ANSI, автоматически он создаётся в кодировке  UTF-8
 
+	string path = "myFile.txt";
+
+	ifstream fin;
+	fin.open(path);
+
+	if (!fin.is_open()) {
+		cout << "Ошибка открытия файла" << endl;
+
+	}
+	else {
+		cout << "файл открыт " << endl;
+		cout << "---------------- " << endl;
+		char ch;
+		string str;
+
+		while (getline(fin, str)) { //читаем строку до endl. Самый хороший вариант потому что проверяем сразу смогли ли считать строку
+			cout << str << endl;
+		}
+
+
+		//while (!fin.eof()) {
+		//	//str = " "; //читает строку до пробела, поэтому нужно "затереть" строку
+		//	//fin >> str; 
+		
+		//	getline(fin, str);
+		//	cout << str<<endl;
+		//}
+
+
+		//while (fin.get(ch)) {//посимвольное считывание из файла и сохранение символа в переменную. get не работает со строками, только с символами
+		//	cout << ch;
+		//}
+	}
+
+	fin.close();
+
+	/*ofstream fout;
+
+	fout.open(path, ofstream::app); //создание файла в папке проекта. если нет такого файла функция open создаёт его. ofstream::app дописывает в существующий файл новую информацию без потери предыдущей
+
+	if (!fout.is_open())
+	{
+		cout << "Ошибка открытия файла" << endl;
+	}else {
+		for (int i = 0; i < 4; i++)
+		{
+			cout << "Введите число: ";
+			int a;
+			cin >> a;
+			fout << a << "\n"; //запись информации в файл(указывается название файла + управление потоком)
+		}
+		
+	}
+
+	fout.close();*/
 
 
 	return 0;

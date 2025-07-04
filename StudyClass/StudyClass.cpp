@@ -32,45 +32,40 @@ int main() {
 	
 	string path = "myFile.txt";
 
-	/*Point point(23, 22, 21);
-	point.Print();
-
-
-	
-	ofstream file;
-	file.open(path, ofstream::app);
-
-	if (!file.is_open()) {
-		cout << "Ошибка открытия файла" << endl;
+	fstream fs;
+	fs.open(path, fstream::in | fstream::out | fstream::app); 
+	//fstream::in указываем что хотим записывать данные в файл. fstream::out что хотим читать 
+	if (!fs.is_open()) {
+		cout << "Файл не удалось открыть " << endl;
 	}
 	else {
+
+		int number;
 		cout << "Файл открыт" << endl;
-		file.write((char*)&point, sizeof(Point)); //первым параметром передаём указатель на ссылку объекта(он должен быть типа char  поэтому используем приведение)
-		// вторым параметром передаём размерность всего класса использую sizeof
-
-
-	}
-
-
-	file.close();*/
-
-
-	ifstream file2;
-	file2.open(path);
-
-	if (!file2.is_open()) {
-		cout <<"Ошибка открытия файла"<< endl;
-	}
-	else {
-		cout << "Файл открыт" << endl;
-		Point pnt;
-		while (file2.read((char*)&pnt, sizeof(Point))) { //пока read может забрать строку и возвращает true в while действие выполняется
-			pnt.Print();
+		cout << "1. Записать данные в файл" << endl;
+		cout << "2. Прочитать все данные из файла" << endl;
+		cin >> number;
+		string stroka;
+		if (number == 1) {
+			cout << "Вводите данные" << endl;
+			SetConsoleCP(1251); //переключение консоли для корректного отображения кириллицы. кодировка по умолчанию 866
+			cin >> stroka;
+			fs << stroka << "\n";
+			SetConsoleCP(866);
 		}
-		
+		else {
+			cout << "Вот все данные в файле: " << endl;
+			while (!fs.eof()) {
+				stroka = " ";
+				fs >> stroka;
+				cout << stroka << endl;
+			}
+
+			
+		}
 	}
 
-	file2.close();
-
+	fs.close();
+	
 	return 0;
 }

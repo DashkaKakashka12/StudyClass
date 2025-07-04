@@ -5,73 +5,72 @@
 
 using namespace std;
 
-//fstream библиотека для чтение и запись одновременно
+class Point {
+public:
 
-//ifstrim класс чтение записей из файла
-//ofstream класс сохранение записей в файл
+	Point() {
+		x = y = z = 0;
+	}
+
+	Point(int x, int y, int z) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+	void Print() {
+		cout << "x:" << x << "\ty:" << y << "\tz:" << z<< endl;
+	}
+
+	int x;
+	int y;
+	int z;
+};
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 	
-	//!ВАЖНО. Файл должен быть сохранён в кодировке ANSI, автоматически он создаётся в кодировке  UTF-8
-
 	string path = "myFile.txt";
 
-	ifstream fin;
-	fin.open(path);
+	/*Point point(23, 22, 21);
+	point.Print();
 
-	if (!fin.is_open()) {
+
+	
+	ofstream file;
+	file.open(path, ofstream::app);
+
+	if (!file.is_open()) {
 		cout << "Ошибка открытия файла" << endl;
-
 	}
 	else {
-		cout << "файл открыт " << endl;
-		cout << "---------------- " << endl;
-		char ch;
-		string str;
-
-		while (getline(fin, str)) { //читаем строку до endl. Самый хороший вариант потому что проверяем сразу смогли ли считать строку
-			cout << str << endl;
-		}
+		cout << "Файл открыт" << endl;
+		file.write((char*)&point, sizeof(Point)); //первым параметром передаём указатель на ссылку объекта(он должен быть типа char  поэтому используем приведение)
+		// вторым параметром передаём размерность всего класса использую sizeof
 
 
-		//while (!fin.eof()) {
-		//	//str = " "; //читает строку до пробела, поэтому нужно "затереть" строку
-		//	//fin >> str; 
-		
-		//	getline(fin, str);
-		//	cout << str<<endl;
-		//}
-
-
-		//while (fin.get(ch)) {//посимвольное считывание из файла и сохранение символа в переменную. get не работает со строками, только с символами
-		//	cout << ch;
-		//}
 	}
 
-	fin.close();
 
-	/*ofstream fout;
+	file.close();*/
 
-	fout.open(path, ofstream::app); //создание файла в папке проекта. если нет такого файла функция open создаёт его. ofstream::app дописывает в существующий файл новую информацию без потери предыдущей
 
-	if (!fout.is_open())
-	{
-		cout << "Ошибка открытия файла" << endl;
-	}else {
-		for (int i = 0; i < 4; i++)
-		{
-			cout << "Введите число: ";
-			int a;
-			cin >> a;
-			fout << a << "\n"; //запись информации в файл(указывается название файла + управление потоком)
+	ifstream file2;
+	file2.open(path);
+
+	if (!file2.is_open()) {
+		cout <<"Ошибка открытия файла"<< endl;
+	}
+	else {
+		cout << "Файл открыт" << endl;
+		Point pnt;
+		while (file2.read((char*)&pnt, sizeof(Point))) { //пока read может забрать строку и возвращает true в while действие выполняется
+			pnt.Print();
 		}
 		
 	}
 
-	fout.close();*/
-
+	file2.close();
 
 	return 0;
 }

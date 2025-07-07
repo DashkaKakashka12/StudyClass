@@ -46,32 +46,25 @@ istream& operator >>(istream& is, Point& point)
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	//Point p(7, 8, 9);
 
-	//cout << p;
-	
-	string path = "myFile.txt";
+	string path = "myFile.tx";
 
 	fstream fs;
-	fs.open(path, fstream::in | fstream::out | fstream::app); 
+	fs.exceptions(ifstream::badbit | ifstream::failbit); //прописываем для ручной обработки исключений
+	//fs.open(path, fstream::in | fstream::out | fstream::app); 
+	try
+	{
+		cout << "Попытка открыть файл" << endl; //дальче места ошибт код не выполнится
+		fs.open(path);
+		cout << "Файл успешно открыт" << endl;
 
-	if (!fs.is_open()) {
-		cout << "Файл не удалось открыть " << endl;
 	}
-	else {
-
-		cout << "Файл открыт" << endl;
-		//fs << p << "\n";
-
-		while (true) {
-
-			Point p;
-			fs >> p;
-			if (fs.eof()) break;
-			cout << p << endl;
-		}
-
+	catch (const ifstream::failure & ex)//можно через exceptions. но ifstream::failure предоставляет ещё и метод code
+	{
 		
+		cout << ex.what() << endl;// вид ошибки 
+		cout << ex.code() << endl; //код ошибки в документации класса
+		cout << "Ошибка открытия файла" << endl;
 	}
 
 	fs.close();

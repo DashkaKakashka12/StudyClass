@@ -17,52 +17,61 @@ public:
 		this->y = y;
 		this->z = z;
 	}
-	void Print() {
-		cout << "x:" << x << "\ty:" << y << "\tz:" << z<< endl;
-	}
+	
 
+private:
 	int x;
 	int y;
 	int z;
+
+	friend ostream& operator <<(ostream& os, const Point& point);
+	friend istream& operator >>(istream& is, Point& point);
+		;
+
 };
+
+ostream& operator <<(ostream& os, const Point& point)
+{
+	os << point.x << " " << point.y << " " << point.z;
+	return os;
+}
+
+istream& operator >>(istream& is, Point& point)
+{
+	is >> point.x >> point.y >> point.z;
+	return is;
+}
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
+
+	//Point p(7, 8, 9);
+
+	//cout << p;
 	
 	string path = "myFile.txt";
 
 	fstream fs;
 	fs.open(path, fstream::in | fstream::out | fstream::app); 
-	//fstream::in указываем что хотим записывать данные в файл. fstream::out что хотим читать 
+
 	if (!fs.is_open()) {
 		cout << "Файл не удалось открыть " << endl;
 	}
 	else {
 
-		int number;
 		cout << "Файл открыт" << endl;
-		cout << "1. Записать данные в файл" << endl;
-		cout << "2. Прочитать все данные из файла" << endl;
-		cin >> number;
-		string stroka;
-		if (number == 1) {
-			cout << "Вводите данные" << endl;
-			SetConsoleCP(1251); //переключение консоли для корректного отображения кириллицы. кодировка по умолчанию 866
-			cin >> stroka;
-			fs << stroka << "\n";
-			SetConsoleCP(866);
-		}
-		else {
-			cout << "Вот все данные в файле: " << endl;
-			while (!fs.eof()) {
-				stroka = " ";
-				fs >> stroka;
-				cout << stroka << endl;
-			}
+		//fs << p << "\n";
 
-			
+		while (true) {
+
+			Point p;
+			fs >> p;
+			if (fs.eof()) break;
+			cout << p << endl;
 		}
+
+		
 	}
 
 	fs.close();

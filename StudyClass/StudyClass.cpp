@@ -43,31 +43,44 @@ istream& operator >>(istream& is, Point& point)
 }
 
 
+void Foo(int value) {
+
+	if (value < 0){
+		throw "Число меньше нуля";
+		//throw exception("Число меньше нуля");//можно передать как число, строку(throw "Число меньше нуля") так и класс (exception) 
+		//чаще всего использую exception и передают параметром сообщение. чтобы в failure можно было словить это exception
+	}
+
+	if (value == 0) {
+		throw exception("Число 0");
+	}
+
+	if (value == 1) {
+		throw 1;
+	}
+
+	cout << "Перемкнная = " << value << endl;
+}
+
+
 int main() {
 	setlocale(LC_ALL, "RU");
 
-
-	string path = "myFile.tx";
-
-	fstream fs;
-	fs.exceptions(ifstream::badbit | ifstream::failbit); //прописываем для ручной обработки исключений
-	//fs.open(path, fstream::in | fstream::out | fstream::app); 
 	try
 	{
-		cout << "Попытка открыть файл" << endl; //дальче места ошибт код не выполнится
-		fs.open(path);
-		cout << "Файл успешно открыт" << endl;
+		Foo(1);
 
 	}
-	catch (const ifstream::failure & ex)//можно через exceptions. но ifstream::failure предоставляет ещё и метод code
+	catch (const exception& ex) //то что ловит catch должно соответстовать типу данных throw(catch автоматически ловит то что бросает throw)
 	{
-		
-		cout << ex.what() << endl;// вид ошибки 
-		cout << ex.code() << endl; //код ошибки в документации класса
-		cout << "Ошибка открытия файла" << endl;
+		cout << "Блок 1 Мы поймали " << ex.what() << endl; //метод what содержит строку самой ошибки
 	}
-
-	fs.close();
+	catch (const char* ex) {
+		cout << "Блок 2 Мы поймали " << ex << endl;
+	}
+	catch (...) { //важен порядок написания. если такой cath будет идти до конкретных, то конкретные не словятся. он в самом конце
+		cout << "что-то пошло не так" << endl;
+	}
 	
 	return 0;
 }

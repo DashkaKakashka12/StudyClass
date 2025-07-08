@@ -42,24 +42,32 @@ istream& operator >>(istream& is, Point& point)
 	return is;
 }
 
+class Exception :public exception { //наследуемся от классаexception
+public:
+	Exception(const char* msg, int dateState) :exception(msg){ //используем конструктор базового класса 
+		this->dateState = dateState;
+	}
+
+	int GetDateState() const {return dateState;} // метод для отслеживания состояния данных
+	//обязательно чтобы в catch, в конструкторе класса и методе было const
+
+private: 
+	int dateState;
+
+};
 
 void Foo(int value) {
 
 	if (value < 0){
-		throw "Число меньше нуля";
-		//throw exception("Число меньше нуля");//можно передать как число, строку(throw "Число меньше нуля") так и класс (exception) 
-		//чаще всего использую exception и передают параметром сообщение. чтобы в failure можно было словить это exception
-	}
-
-	if (value == 0) {
-		throw exception("Число 0");
+		throw exception("Число меньше нуля"); 
+		
 	}
 
 	if (value == 1) {
-		throw 1;
+		throw Exception("Число = 1", value); 
 	}
 
-	cout << "Перемкнная = " << value << endl;
+	cout << "Переменная = " << value << endl;
 }
 
 
@@ -70,17 +78,17 @@ int main() {
 	{
 		Foo(1);
 
-	}
-	catch (const exception& ex) //то что ловит catch должно соответстовать типу данных throw(catch автоматически ловит то что бросает throw)
+	} //важен порядок catch. exception до Exception словит прописанный throw как обычный exception
+	catch (const Exception& ex) //обязательно чтобы в catch, в конструкторе класса и методе было const
 	{
-		cout << "Блок 1 Мы поймали " << ex.what() << endl; //метод what содержит строку самой ошибки
+		cout << "Блок 1 Мы поймали " << ex.what() << endl; 
+		cout << "Состояние данных " << ex.GetDateState() << endl; //метод GetDateState выводит строку самой ошибки
 	}
-	catch (const char* ex) {
-		cout << "Блок 2 Мы поймали " << ex << endl;
+	catch (const exception& ex)
+	{
+		cout << "Блок 2 Мы поймали " << ex.what() << endl; //метод what содержит строку самой ошибки
 	}
-	catch (...) { //важен порядок написания. если такой cath будет идти до конкретных, то конкретные не словятся. он в самом конце
-		cout << "что-то пошло не так" << endl;
-	}
+	
 	
 	return 0;
 }

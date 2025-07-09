@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <windows.h>
+#include "StudyClass.h"
 
 using namespace std; 
 
@@ -28,34 +29,49 @@ private:
 
 };
 
-template <typename T, typename P> //всегда обязательно неотрывно перед классом. вместо typename можно писать class. функционал не меняется
-class MyClass {
+
+template <class T1> //всегда обязательно неотрывно перед классом. вместо typename можно писать class. функционал не меняется
+class TypeSize {
 public:
 	
-	MyClass(T a, P a2) { //принимаем параментром тип шаблона
+	TypeSize(T1 a) { //принимаем параментром тип шаблона
 		this->a = a;
-		this->a2 = a2;
 	}
 	
 	void DataTypeSize() {
 		cout << "Переменная T занимает " << sizeof(a) << " байта" << endl;
-		cout << "Переменная P занимает " << sizeof(a2) << " байта" << endl;
 	}
 
-private:
-	T a;
-	P a2;
-
+protected:
+	T1 a;
+	
 };
+
+
+template<class T1>
+class TypeInfo :public TypeSize<T1>{//обязатльно указывать тип который наследуется. Можно указать явно int например но он должен совпадать
+
+public:
+	TypeInfo(T1 a): TypeSize<T1>(a) {   //так как конструктора по умолчанию у TypeSize нет 
+
+	}
+
+	void ShowTipeName() {
+		cout << "Переменная типа " << typeid(this->a).name() << endl;//для передачи поля базового класса меняем модификатор доступа. #include "typeinfo"
+						//обязательно указывать this потому что на этапе компиляции TypeInfo компилятор ещё не знает что такое поле есть в TypeSize 
+	}
+};
+
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	Point a;
-	int a2 = 2; // обязательно надо инициализировать.	ПОЧЕМУ??
+	
+	int c = 0; // обязательно надо инициализировать int.	ПОЧЕМУ??
 
-	MyClass <Point, int>ob(a, a2);//нельзя просто создать объект класса. Обязательно указываем тип данных с которым работаем 
+	TypeInfo <int>ob(c);//нельзя просто создать объект класса. Обязательно указываем тип данных с которым работаем 
 	ob.DataTypeSize();
+	ob.ShowTipeName();
 
 	return 0;
 }

@@ -3,63 +3,37 @@
 #include <fstream>
 #include <windows.h>
 
-using namespace std;
-
-//перечисляемый тип для объявления символических имён целочисленных констант
-//может прописываться и вне самого классаю если в классе то ведёт себя как метод
+using namespace std; //позволяет не прописывать str:: на каждой строке. такое работает со всеми пространствами
+						//нельзя использовать если есть несколько функций с одинаковыми именами.
 
 
+//используется два разработчика назвали функции одиноковыми именами
 
-class PC {
-public:
-
-	enum PcState
-	{
-		Off,
-		On,
-		Sleap
-	};
-
-	PcState GetState()
-	{ 
-		return State;
+namespace firstNS {
+	void Foo() {
+		cout << "Функция из firstNS" << endl;
 	}
-	void SetState(PcState state) {
-		this->State = state;
+}
+
+namespace SecondNS {
+	void Foo() {
+		cout << "Функция из SecondNS" << endl;
 	}
+}
 
-
-private:
-	PcState State;
-}; 
-
+//namespace SecondNS {
+//	void Foo() {
+//		cout << "Функция из SecondNS" << endl;
+//	}
+//} для компилятора два одинаковых пространства имён с одинаковой реализацией рано одному пространству имён с дублированием реализации
+// если  такое всё же произошло, то второе пространство имён можно поместить в новое. объявление thindNS::SecondNS::Foo();
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
 
-	PC pc;
-	pc.SetState(pc.PcState::Off);
-	/*if (pc.GetState() == PcState::On) {
-		cout << "PC work" << endl;
-	}*/
-	
+	SecondNS::Foo();
 
-	switch (pc.GetState())
-	{
-	case pc.PcState::On:
-		cout << "Включён" << endl;
-		break;
-	case pc.PcState::Off:
-		cout << "Выключен" << endl;
-		break; 
-	case pc.PcState::Sleap:
-		cout << "Спит" << endl;
-		break;
-	}
 
-	/*PcState p;
-	p = PcState::Off;*/
-	
 	return 0;
 }

@@ -3,37 +3,59 @@
 #include <fstream>
 #include <windows.h>
 
-using namespace std; //позволяет не прописывать str:: на каждой строке. такое работает со всеми пространствами
-						//нельзя использовать если есть несколько функций с одинаковыми именами.
+using namespace std; 
 
 
-//используется два разработчика назвали функции одиноковыми именами
 
-namespace firstNS {
-	void Foo() {
-		cout << "Функция из firstNS" << endl;
+class Point {
+public:
+	Point() {
+		 x = 0.0;
+		 y = 0.0;
+		 z = 0.0;
 	}
-}
 
-namespace SecondNS {
-	void Foo() {
-		cout << "Функция из SecondNS" << endl;
+	Point(double x, double y, double z) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
 	}
-}
 
-//namespace SecondNS {
-//	void Foo() {
-//		cout << "Функция из SecondNS" << endl;
-//	}
-//} для компилятора два одинаковых пространства имён с одинаковой реализацией рано одному пространству имён с дублированием реализации
-// если  такое всё же произошло, то второе пространство имён можно поместить в новое. объявление thindNS::SecondNS::Foo();
+private:
+	double x;
+	double y;
+	double z;
+
+};
+
+template <typename T, typename P> //всегда обязательно неотрывно перед классом. вместо typename можно писать class. функционал не меняется
+class MyClass {
+public:
+	
+	MyClass(T a, P a2) { //принимаем параментром тип шаблона
+		this->a = a;
+		this->a2 = a2;
+	}
+	
+	void DataTypeSize() {
+		cout << "Переменная T занимает " << sizeof(a) << " байта" << endl;
+		cout << "Переменная P занимает " << sizeof(a2) << " байта" << endl;
+	}
+
+private:
+	T a;
+	P a2;
+
+};
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
+	Point a;
+	int a2 = 2; // обязательно надо инициализировать.	ПОЧЕМУ??
 
-	SecondNS::Foo();
-
+	MyClass <Point, int>ob(a, a2);//нельзя просто создать объект класса. Обязательно указываем тип данных с которым работаем 
+	ob.DataTypeSize();
 
 	return 0;
 }

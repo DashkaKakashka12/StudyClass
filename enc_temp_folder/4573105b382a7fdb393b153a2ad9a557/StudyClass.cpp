@@ -14,13 +14,16 @@ public:
 		cout << "Constructor" << endl;
 	}
 
-	T& operator *() {//возвращаем значение по ссылке чтобы далее могли изменять его, а не создавать копию
+	T& operator *() {
 
 		return *a;
 	}
+	//DoPoint() {
+	////	T* p = new T;
+	//}
 
 	~SmartPointer(){
-		delete a; //удаляет вксь объект и выделенную под него память тоже
+		delete a; //просто удаляет вксь объект и выделенную под него память тоже
 		cout << "Destructor" << endl;
 
 	}

@@ -6,31 +6,36 @@
 
 using namespace std;
 
-template<typename T>
-
-class Printer {
+class MyClass1 {
 public:
-	void Print(T a) {
-		cout << a << endl;
-	}
-private:
+	int a = 10;
 
 };
 
-template<> //создаём специализацию 
-class Printer<string> { //указываем в <> тип для которого хотим сделать специализацию. когда укажем такой тип создадим новый класс
-public:
-	void Print(string a) { //как бы переопределяем метод под нужный тип
-		cout << "--- " << a << " ---" << endl;
-	}
+class MyClass2 : public MyClass1 {
+
 
 };
+
+struct MyStruct1 { //у структуры по умолчанию все поля и методы, наследование с public, у класса всё с private.
+
+	int a = 22;
+};
+
+
+
+struct MyStruct2: MyStruct1 {
+
+
+};
+
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	Printer<string> a;
-	a.Print("привет");
+	MyStruct2 m;
+	MyStruct1 l;
+
 
 	return 0;
 }

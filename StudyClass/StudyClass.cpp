@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <windows.h>
-#include "memory"
+#include <memory>
 
 using namespace std;
 
@@ -32,6 +32,7 @@ private:
 
 int main() {
 	setlocale(LC_ALL, "RU");
+	srand(time(NULL));
 
 	/*SmartPointer<int> a1 = new int(5);  
 	SmartPointer<int> a2 = a1;*/
@@ -50,10 +51,18 @@ int main() {
 	shared_ptr <int> ap2(ap1);*/ // оба указетеля могут цказывать на оду и туже облать памяти
 	//все данные будут уничтожены когда уничтожится последний указатель
 
-	int size;
-	int* arr = new int[size] { 1, 2, 3, 4, 5 };
-	shared_ptr <int[]> ap1(arr);
+	int size = 0;
+	cout << "Введите размер массива " << endl;
+	cin >> size;
+	shared_ptr <int[]> ap1(new int[size]);
 
+	cout << "Массив: " << endl;
+
+	for (int i = 0; i < size; i++)
+	{
+		ap1[i] = rand() % 20;
+		cout << ap1[i] << endl;
+	}
 
 	return 0;
 }

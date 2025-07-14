@@ -7,62 +7,104 @@
 using namespace std;
 
 template<typename T>
-class SmartPointer {
+class List {
 public:
-	SmartPointer(T* a) {
-		this->a = a;
-		cout << "Constructor" << endl;
-	}
+	List();
+	~List();
 
-	T& operator *() {//возвращаем значение по ссылке чтобы далее могли изменять его, а не создавать копию
+	void push_back(T data);
+	int getSize() { return size; }
 
-		return *a;
-	}
-
-	~SmartPointer(){
-		delete a; //удаляет весь объект и выделенную под него память тоже
-		cout << "Destructor" << endl;
-
-	}
+	T& operator [](const int index);
 
 private:
-	T *a;
+	template<typename T>
+	class Node {
+	public: //нет private потому что весь класс private в List
+		Node* pNext; //указатель на следующий элемент типа следующего элемента
+		T data;
+
+
+		Node(T data = T(), Node* pNext = nullptr) {
+			this->data = data;
+			this->pNext = pNext;
+		}
+
+
+	};
+
+
+	Node<T> *head; //указатель на первый элемент списка
+	int size;
+
 };
+
+
+template<typename T>
+List<T>::List() {
+	size = 0;
+	head = nullptr;
+}
+
+template<typename T>
+List<T>::~List() {
+
+}
+
+template<typename T>
+void List<T>::push_back(T data)
+{
+	if (head == nullptr) {
+		head = new Node<T>(data);
+	}
+	else {
+		Node<T>* current = this->head;
+
+		while (current->pNext !=nullptr) {
+			current = current->pNext;
+		}
+
+		current->pNext = new Node<T>(data);
+
+	}
+
+	size++;
+}
+
+template<typename T>
+T& List<T>::operator[](const int index)
+{
+	Node<T>* current = this->head;
+
+	int count = 0;
+
+	while (current != nullptr) { //идём пока адрес элемента следующего не равен нулю
+		if (count == index) {  
+			return current->data; // если количество равно принятому индексу возвращаем данные(тут значение)
+		}
+
+		current = current->pNext; // если количество не равно принятому индексу, заменяем объект следующим за ним по адресу и увеличиваем количество
+		count++;
+	}
+}
+
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
-	srand(time(NULL));
+	
+	List<int> lst;
+	lst.push_back(5);
+	lst.push_back(10);
+	lst.push_back(40);
 
-	/*SmartPointer<int> a1 = new int(5);  
-	SmartPointer<int> a2 = a1;*/
+	cout << "Количество элементов в списке: "<< lst.getSize() << endl;
 
-	/*auto_ptr<int> ap1(new int(5)); 
-	auto_ptr<int> ap2(ap1);*/ //указатель ap1 затирается и доступ остаётся только у ap2
-
-
-	//unique_ptr <int> ap1(new int(5)); 
-	//unique_ptr <int> ap2; //нельзя чтобы оба указателя ссылались на одну облась памяти
-	//ap2 = move(ap1); //p2.swap(p1) анфлог. передаём значение из ap1 в ap2, адрес ap1 не затирается(неопределённое состояние) 
-	//reset(затирает адрес и значение) release(затирает только значение)
-
-
-	/*shared_ptr <int> ap1(new int(5)); 
-	shared_ptr <int> ap2(ap1);*/ // оба указетеля могут цказывать на оду и туже облать памяти
-	//все данные будут уничтожены когда уничтожится последний указатель
-
-	int size = 0;
-	cout << "Введите размер массива " << endl;
-	cin >> size;
-	shared_ptr <int[]> ap1(new int[size]);
-
-	cout << "Массив: " << endl;
-
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < lst.getSize(); i++)
 	{
-		ap1[i] = rand() % 20;
-		cout << ap1[i] << endl;
+		cout << lst[i] << endl;
 	}
 
+	
 	return 0;
 }

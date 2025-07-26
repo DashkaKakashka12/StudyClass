@@ -6,8 +6,9 @@
 
 using namespace std;
 
-//префикс и постфикс
-//префиксный и постфиксный отличаются приоритетностью операций 
+//foreach перебор контейнеров 
+//for_each	//как алгоритм + подключить библиотеку
+
 
 template<typename T>
 void PrintList(const list<T>& lts) {
@@ -15,19 +16,22 @@ void PrintList(const list<T>& lts) {
 	{
 		cout << *i << endl;
 	}
-
-
 }
 
 int main() {
 	setlocale(LC_ALL, "RU");
 	
-	list<int> ::iterator it;
+	//int arr[] = { 1,2,3,4,5};
+	list<int> list = { 1,2,3,4,5,6 };
 
-	it++; //f12 для просмотра прописанной разницы в их реализации
-
-
-	++it;
+	for (auto element : list) //	for each (auto var in arr) -- не работает
+	{
+		//данные передаются по значению поэтому при изменении element в коллекции ничего не меняется
+		//(const auto &element : arr)
+		cout << element << endl;
+	}
 	
+
+
 	return 0;
 }

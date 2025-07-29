@@ -1,37 +1,36 @@
 ﻿#include <iostream>
-#include <string>
-#include <thread>
-#include <chrono>
-
-
+#include <list>
+#include <vector>
+#include <deque>
+#include <stack>
 
 
 using namespace std;
 
-void doWork() {
-	for (size_t i = 0; i < 10; i++)
-	{
-		cout << "ID: " << this_thread::get_id() << "\tdoWork\t" << i<<endl;
-		this_thread::sleep_for(chrono::milliseconds(1000)); //делает паузу благодаря библиотеке chrono в 1 сек
-	}
-}
+//стек. не является контейнером, адаптер для него. ограничивают функционал увеличивая скорость работы. контейнер может быть любым (вектор, лист, deque)
+//вывести все элементы в стеке нельзя, доступ предоставляется только к верхнему. со стеком не работают итераторы
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	thread th(doWork); //создание нового потока. параметром передаём то что будет выполняться в другом потоке
-	//th.detach(); //поток закроется не дожидаясь замершения работы метода dowork
+	stack<int, list<int>> st; //если не указывать какой контейнер лежит в основе стека(просто stack<int>) используется дек. тогда можно использвоать итераторы
 
+	st.push(7);
+	st.push(11);
+	st.push(44); //создание копии и перенос её в stack
+	st.emplace(10); //создаёт сразу в коллекции элемент, работает быстрее.
 
-	for (size_t i = 0; i < 10; i++)
-	{
-		cout << "ID: " << this_thread::get_id() << "\tmain\t"<<i << endl;
-		this_thread::sleep_for(chrono::milliseconds(500)); //делает паузу благодаря библиотеке chrono в 1 сек
+	auto a = st._Get_container(); 
+	//cout << a[1] << endl;
+
+	while (!st.empty()) {
+		cout << st.top() << endl;
+		st.pop(); //извлечь элемент -- достаём из коллекции
 	}
 
-
-	th.join(); //надо вызывать в самом конце
-
+	//pop убирает последний добавленные элемент 
+	//top используется для просмотра последнего эл-та, возвращает ссылку на эл-т
+	//empty, size
 	return 0;
 }

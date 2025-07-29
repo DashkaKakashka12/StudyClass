@@ -1,43 +1,37 @@
 ﻿#include <iostream>
 #include <string>
-#include <vector>
-#include <list>
-#include <forward_list>
-#include <array>
-#include <deque>
-#include <set>
-#include <map>
+#include <thread>
+#include <chrono>
+
+
 
 
 using namespace std;
 
-//map, multimap -- структура бинарного дерева, хранит и ключ и значение, тоже упорядочиваются, но только по ключу
-//map хранит только уникальные значенияю есть перегруженный [] для изменения значения
-
-
-//multimap -- может хранить повторяющиеся значения, у multimap всё тоже самое что и у map. только может быть несколько одинаковых ключей. но не перегружен [], at
+void doWork() {
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << "ID: " << this_thread::get_id() << "\tdoWork\t" << i<<endl;
+		this_thread::sleep_for(chrono::milliseconds(1000)); //делает паузу благодаря библиотеке chrono в 1 сек
+	}
+}
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
-	
-	//pair<int, string> p(1, "phone");//шаблонная пара. первое ключ, второе значение.
-	
-	map<int, string> m;
 
-	m.insert(make_pair(1, "notepad")); //для добавления элемента. пара создаётся и копируется в map 
-	m.emplace(2, "phone"); // более краткий спооб добавления жлемента. пара сразу создаётсчя в map
-	m.emplace(55, "tv");
-	m.emplace(44, "condi");
+	thread th(doWork); //создание нового потока. параметром передаём то что будет выполняться в другом потоке
+	//th.detach(); //поток закроется не дожидаясь замершения работы метода dowork
 
-	m.erase(2);
 
-	cout << m[22] << endl;
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << "ID: " << this_thread::get_id() << "\tmain\t"<<i << endl;
+		this_thread::sleep_for(chrono::milliseconds(500)); //делает паузу благодаря библиотеке chrono в 1 сек
+	}
 
-	// auto it = m.find(2); // вывод значения. также можео и изменить значение. 
-	//добавит элемент если его не было. нужно использовать at, тогда не добавит если элемента не было
 
-	//у multimap всё тоже самое. только может быть несколько одинаковых ключей. но не перегружен [], at
+	th.join(); //надо вызывать в самом конце
 
 	return 0;
 }

@@ -1,61 +1,41 @@
 ﻿#include <iostream>
 #include <list>
-#include <vector>
-#include <queue>
+#include <thread>
+#include <chrono>
+
 
 
 
 using namespace std;
 
-//queue -- первый вошёл первый вышел. не является контейнером, адаптер для него. ограничивают функционал увеличивая скорость работы. контейнер может быть любым (лист, deque)
-//можно добавить только в конец.
-//вектор не может быть в основе queue потому что он реализовывает массив
+//передача параметров в поток
 
 
-//priority_queue. элементы можно сразу складывать по приоритету при извлечении. не может использовать лист. только вектор, deque
+void doWork(int a, int b) {
+
+	this_thread::sleep_for(chrono::milliseconds(3000));
+	cout << "----------DoWork START" << endl;
+	this_thread::sleep_for(chrono::milliseconds(2000));
+	cout << "a+b: " << a + b << endl;
+	this_thread::sleep_for(chrono::milliseconds(3000));
+	cout << "----------DoWork STOR" << endl;
+}
 
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	priority_queue<int> q;
-	q.push(2);
-	q.push(3);
-	q.push(4);
-	q.push(5);
-
-	//по умолчанию сортируются от большего к меньшему при добавлении
-
-	while (!q.empty()) {
-		cout << q.top() << endl;
-		q.pop();
+	
+	//doWork(2, 3);
+	thread th(doWork, 2, 3);//параметры передаются через запятую вместе с ссылкой на функцию
+	
+	for (size_t i = 0; true; i++)
+	{
+		cout << "ID: " << this_thread::get_id() << "\tmain\t" << i << endl;
+		this_thread::sleep_for(chrono::milliseconds(500)); //делает паузу благодаря библиотеке chrono в 1 сек
 	}
 
-
-
-	//queue
-	//cout << q.front() << endl;
-
-	//auto a = q._Get_container();
-
-	/*while (!q.empty()) {
-		cout << q.front() << endl;
-		q.pop();
-	}*/
-
-	//queue
-	//q.back(); //позволяет посмотреть последний добавленный элемент без извлечения
-	//q.emplace(); //добавить элемент в конец бех копии, implase с копией
-	//q.empty(); //проверяет пуст ли контейнер, возвращает true или false
-	//q.front();//позволяет посмотреть первый добавленный элемент без извлечения
-	//q.pop();//извлекает элемент из очерди. начиная с первого естественно
-	//q.size();
-	//q.swap(); //предназначен для обмена контейнерами содержимыми
-	//q._Get_container();//возвращает контейнер лежащий во снове. по умолчанию в основе лежит дек
-	//q.pop//для извлечения первого элемента из очереди
-
-
-
+	th.join();
 
 	return 0;
 }

@@ -5,10 +5,9 @@
 
 using namespace std;
 
-//function -- обёртка для функции, метода класса. как указатель на функцию
-//function<void(int)> f -- сначала указываем тип возвращаемого значения, затем типы параметров. через запятую если несколько
-
-
+//Лямбда выражения (анонимные функции) -- [](){}
+//пространство вокруг лямбда функции это контекст. внутри тела лямбды нельзя ссылаться на контекст, надо передавать в [] ссылку на контекст
+//возврат значений из лямбды через auto
 void Foo(int a) {
 	if (a > 10 && a < 40) {
 		cout << "Foo: ";
@@ -24,12 +23,10 @@ void Bar(int a) {
 	}
 }
 
-void DoWork(vector<int>& vc, vector<function<void(int)>> fvc) { //function<void(int,int)> f
+void DoWork(vector<int>& vc, function<void(int)> f) { //function<void(int,int)> f
 	//vector<function<void(int)>> fvc -- вектор из всех функций с соответствующей сигнатурой
 	for (auto el : vc) {
-		for (auto& fel : fvc) {
-			fel(el);
-		}
+		f(el);
 	}
 
 }
@@ -37,15 +34,25 @@ void DoWork(vector<int>& vc, vector<function<void(int)>> fvc) { //function<void(
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	vector<int> vc = { 1,2,30,45,67,8,54,99,122,57,23 };
+	int p = 0;
+	auto f = [&p]() {
+		p = 9;
+	}; 
+	f();
 
-	vector<function<void(int)>> fvc; //вектор для функций
+	/*vector<int> vc = { 1,2,30,45,67,8,54,99,122,57,23 };
+	DoWork(vc, [](int a) {
+		if (a % 2 == 0) {
+			cout << "Лямбда: ";
+			cout << a << endl;
+		}
+	});*/
 
-	fvc.emplace_back(Foo);
-	fvc.emplace_back(Bar);
 
+	 //f = [](int a) {
+		//cout << "Вызвана анонимная функция с параметром " << a << endl;
+		//}; //всю анонимную передаём параметром в Dowork вместо присваивания. тоесть можно function<void(int)> f, f = анонимная функцию. или сразу
 
-	DoWork(vc, fvc);
 
 	return 0;
 }

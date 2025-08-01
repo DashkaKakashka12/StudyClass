@@ -1,27 +1,51 @@
 ﻿#include <iostream>
+#include <functional>
+#include <vector>
 
 
 using namespace std;
 
-//union -- объединение -- технология которая позвооляет делить одну и ту же область памяти под разные данные
-//union выделяет место для самой большой тип данных, если используется меньший, то свободное выделенное место забивается нулями
+//function -- обёртка для функции, метода класса. как указатель на функцию
+//function<void(int)> f -- сначала указываем тип возвращаемого значения, затем типы параметров. через запятую если несколько
 
 
-union My { //данный union выделяет 4 байта
-	short int a; //2 байта
-	int b; //4 байта
-	float c; //4 байта
-};
+void Foo(int a) {
+	if (a > 10 && a < 40) {
+		cout << "Foo: ";
+		cout << a << endl;
+	}
+}
+
+
+void Bar(int a) {
+	if (a % 2 == 0) {
+		cout << "Bar: ";
+		cout << a << endl;
+	}
+}
+
+void DoWork(vector<int>& vc, vector<function<void(int)>> fvc) { //function<void(int,int)> f
+	//vector<function<void(int)>> fvc -- вектор из всех функций с соответствующей сигнатурой
+	for (auto el : vc) {
+		for (auto& fel : fvc) {
+			fel(el);
+		}
+	}
+
+}
 
 int main() {
 	setlocale(LC_ALL, "RU");
 
-	My m;
-	m.a = 5; //когда мы в union запишем другое значение она перезапишет все значения 
-	m.b = 2000;
-	m.c = 43.56;
+	vector<int> vc = { 1,2,30,45,67,8,54,99,122,57,23 };
 
-	cout << m.c << endl;
+	vector<function<void(int)>> fvc; //вектор для функций
+
+	fvc.emplace_back(Foo);
+	fvc.emplace_back(Bar);
+
+
+	DoWork(vc, fvc);
 
 	return 0;
 }

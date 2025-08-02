@@ -1,29 +1,31 @@
 ﻿#include <iostream>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
-//функторы -- функциональные объекты. объекты класса у которых перегружен оператор (), из-за чего может вести себя как функция
-//может использоваться для подсчёта count.
+//предикаты -- функтор(объект класса который используется как функция) который возвращает булевое значение
+//по факту предикат это просто функция возвращающая bool. если в классе то это булевый функтор
 
-class MyFunctor {
-public:
-    int operator() (int a, int b) 
-    { //operstor() -- вместо названия объекта, так как он может принимать парамтры
-        cout << "я функтор " <<endl;
-        return a+b;
-    }
+//count_if(v.begin(), v.end(), Null) -- алгоритм используется для получения количества элементов по условию, объявленному в предикате
+//видос 147 пример предиката как функтора в классе
 
-private:
-    int count = 0;
-};
 
+bool MinNull(int a) {
+    return a > 0;
+}
+
+bool MoreNull(int a) {
+    return a < 0;
+}
 
 
 int main() {
     setlocale(LC_ALL, "RU");
-    MyFunctor f;
-    int result = f(2, 2);
-    cout <<result;
 
+    vector<int> v = { -1, -4, 8, 9, 89, 2 };
+   
+    auto count = count_if(v.begin(), v.end(), MoreNull); //count_if алгоритм библиотеки algorithm для подсчёта кол-ва элементов stl коллекции
+    cout << count << endl;
 
     return 0;
 }

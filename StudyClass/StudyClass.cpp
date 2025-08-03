@@ -5,51 +5,53 @@
 using namespace std;
 
 //алгоритм -- набор функций для упрощения решения определённых задач
-// для sort нужен обязательно бинарный преикат
-// sort(v.begin(), v.end(), [](int a, int b) {return a > b;});
+// find -- поиск определённого элемента, третим значением передаётся искомое число
+// find_if -- поиск элемента по условию с использованием предикат(передаётся третьим параметром) 
+// find_if_not -- инверсирует возвращённое значение результата find_if
 
-//148 пример большой сортировки коллекции. 
-//показано что в классе для sort должен быть перегружен оператор сравнения, если не ипользуется предикат
+class Person
+{
+public:
+    Person(string name, double score) {
+        this->Name = name;
+        this->Score = score;
+    }
 
+    string Name;
+    double Score;
 
-bool MinNull(int a) {
-    return a > 0;
-}
-
-bool MoreNull(int a) {
-    return a < 0;
-}
-
+};
 
 
 int main() {
     setlocale(LC_ALL, "RU");
 
-    vector<int> v = { 1, 4, 8, 9, 89, 2 };
-    sort(v.begin(), v.end(), [](int a, int b) {return a > b;});
-    // sort(v.begin(), v.end()); -- сортировка от меньшего к большему по умолчанию
-    //третий параметр это предикат. анонимный предикат = булевый. бинарный -- принимающий два параметра 
+    vector<Person> people{
+        Person("Вася", 181),
+        Person("Петя", 30),
+        Person("Маша", 179),
+        Person("Даша", 200),
+        Person("Катя", 198),
+        Person("Андрей", 181),
+        Person("Сергей", 50),
+        Person("Иван", 150),
+    };
+    
+    vector<int> v = { 6,4,4,12,2,1 };
+
+   // auto result = find(v.begin(), v.end(), 7); //просто ищет один элемент в коллекции
    
-    
-    for (auto el : v) {
-        cout << el << endl;
+    auto result = find_if(people.begin(), people.end(), [](const Person &p){
+        return p.Score == 50 && p.Name== "Сергеаай";
+        });
 
+
+    if (result == people.end()) {
+        cout << "-" << endl;
     }
-
-    cout << "-----------" << endl;
-
-    const int size = 6;
-    int arr[size] = {1, 4, 8, 9, 89, 2};
-
-    sort(arr, arr + size, [](int a, int b) {return a > b;});
-
-    for (auto el : arr) {
-        cout << el << endl;
+    else {
+        cout << "+" << endl;
     }
-
-
-    
-    
 
     return 0;
 }

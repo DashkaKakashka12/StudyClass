@@ -5,9 +5,11 @@
 using namespace std;
 
 //алгоритм -- набор функций для упрощения решения определённых задач
-// find -- поиск определённого элемента, третим значением передаётся искомое число
-// find_if -- поиск элемента по условию с использованием предикат(передаётся третьим параметром) 
-// find_if_not -- инверсирует возвращённое значение результата find_if
+
+// copy -- копирование элементов из одной коллекции в другую
+// третьим параметром передаётся back_inserter -- помещение всех элементов в другую коллекцию
+
+//copy_if -- позволяет копировать элементы по определённому условию. четвёртым параметром принимает предикат
 
 class Person
 {
@@ -37,20 +39,22 @@ int main() {
         Person("Иван", 150),
     };
     
-    vector<int> v = { 6,4,4,12,2,1 };
+    vector<Person> result;
 
-   // auto result = find(v.begin(), v.end(), 7); //просто ищет один элемент в коллекции
-   
-    auto result = find_if(people.begin(), people.end(), [](const Person &p){
-        return p.Score == 50 && p.Name== "Сергеаай";
+    //copy(people.begin(), people.end(), back_inserter(result));
+
+    copy_if(people.begin(), people.end(), back_inserter(result), [](const Person&p) {
+        return p.Score >= 150;
         });
 
+    sort(result.begin(), result.end(), [](const Person& p, const Person& p2) {
+        return p.Score>p2.Score;
+        });
 
-    if (result == people.end()) {
-        cout << "-" << endl;
-    }
-    else {
-        cout << "+" << endl;
+    cout << "всего элементов " << result.size() << endl;
+
+    for (auto el : result) {
+        cout << el.Name << "\t"<< el.Score << endl;
     }
 
     return 0;

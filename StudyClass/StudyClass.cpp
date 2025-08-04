@@ -5,18 +5,15 @@
 using namespace std;
 
 //алгоритм -- набор функций для упрощения решения определённых задач
-
-// copy -- копирование элементов из одной коллекции в другую
-// третьим параметром передаётся back_inserter -- помещение всех элементов в другую коллекцию
-
-//copy_if -- позволяет копировать элементы по определённому условию. четвёртым параметром принимает предикат
+//remove -- не удаляет, а перемещает все элементы указанные 3 параметром в конец вектора. нужно использовать erase
+//remove_if -- не удаляет, а перемещает все элементы по условию предикаты(передаётся третьим параметром)
 
 class Person
 {
 public:
     Person(string name, double score) {
-        this->Name = name;
         this->Score = score;
+        this->Name = name;
     }
 
     string Name;
@@ -29,33 +26,31 @@ int main() {
     setlocale(LC_ALL, "RU");
 
     vector<Person> people{
-        Person("Вася", 181),
-        Person("Петя", 30),
-        Person("Маша", 179),
-        Person("Даша", 200),
-        Person("Катя", 198),
-        Person("Андрей", 181),
+        Person("Ваня", 150),
+        Person("Катя", 130),
         Person("Сергей", 50),
-        Person("Иван", 150),
+        Person("Арина", 10),
+        Person("Маша", 30),
+        Person("Даша", 200)
     };
-    
-    vector<Person> result;
 
-    //copy(people.begin(), people.end(), back_inserter(result));
+    // vector<int> v = {1,2,5,77,89,6,7,6};
+    //auto result =  remove(v.begin(), v.end(), 6); //result указывает на первый ненужный элемент
+    //v.erase(result, v.end()); //окончательно удаление элементов. result граница нужных эл-тов, end граница всех эл-тов
 
-    copy_if(people.begin(), people.end(), back_inserter(result), [](const Person&p) {
-        return p.Score >= 150;
-        });
+   auto result = remove_if(people.begin(), people.end(), [](const Person& p) {return p.Score < 50; });
+   people.erase(result, people.end());
 
-    sort(result.begin(), result.end(), [](const Person& p, const Person& p2) {
-        return p.Score>p2.Score;
-        });
+   sort(people.begin(), people.end(), [](const Person& p1, const Person& p2) {return p1.Score > p2.Score; });
 
-    cout << "всего элементов " << result.size() << endl;
+    cout << "Количество элементов: " << people.size() << endl;
 
-    for (auto el : result) {
-        cout << el.Name << "\t"<< el.Score << endl;
+    for (auto el : people) {
+        cout << el.Name << "\t" << el.Score << endl;
     }
+
+    
+   
 
     return 0;
 }

@@ -1,12 +1,13 @@
 ﻿#include <iostream>
 #include <algorithm>
 #include <vector>
+#include <list>
 #include <string>
 using namespace std;
 
 //алгоритм -- набор функций для упрощения решения определённых задач
-//remove -- не удаляет, а перемещает все элементы указанные 3 параметром в конец вектора. нужно использовать erase
-//remove_if -- не удаляет, а перемещает все элементы по условию предикаты(передаётся третьим параметром)
+//поиск наибольшего элемента(max_element) -- работает для всех контейнеров. Напоминание vector -- динамический массив, list -- двухсвязный список
+//параметрами передаём начало и конец контейнера
 
 class Person
 {
@@ -34,20 +35,17 @@ int main() {
         Person("Даша", 200)
     };
 
-    // vector<int> v = {1,2,5,77,89,6,7,6};
-    //auto result =  remove(v.begin(), v.end(), 6); //result указывает на первый ненужный элемент
-    //v.erase(result, v.end()); //окончательно удаление элементов. result граница нужных эл-тов, end граница всех эл-тов
+    //vector<int> v = { 1,3,44,5,2,6,5,1 };
+    //list<int> l = { 3,5,8,90,45,6,7 };
+    const int size = 7;
+    int arr[size] = { 3,5,8,90,45,6,7 };
+    
+    auto max = max_element(arr, arr+size); //нельзя передать просто size потому что это просто чило а не указатель
+    cout << *max << endl;
 
-   auto result = remove_if(people.begin(), people.end(), [](const Person& p) {return p.Score < 50; });
-   people.erase(result, people.end());
-
-   sort(people.begin(), people.end(), [](const Person& p1, const Person& p2) {return p1.Score > p2.Score; });
-
-    cout << "Количество элементов: " << people.size() << endl;
-
-    for (auto el : people) {
-        cout << el.Name << "\t" << el.Score << endl;
-    }
+    /*for (auto el : v) {
+        cout << el << endl;
+    }*/
 
     
    

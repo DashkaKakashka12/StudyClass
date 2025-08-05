@@ -3,13 +3,13 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <numeric>
 using namespace std;
 
-//алгоритм -- набор функций для упрощения решения определённых задач
-//поиск минимального элемента(min_element) -- работает для всех контейнеров. Напоминание vector -- динамический массив, list -- двухсвязный список
-//параметрами передаём начало и конец контейнера
 
-//minmax_element -- для получения и минимального и максимального элементов. возвращает пару
+//accunulate -- сумма и произведение элементов массива. обязатлеьно подключить библиотеку numeric. третий параметр- значение к которому прибавится результат вычисления
+//стандартное поведение сложение.
+//для умножения четвёртым параметром предикат, в него передаём 2 параметра и перемножаем в return
 
 class Person
 {
@@ -37,18 +37,29 @@ int main() {
         Person("Даша", 200)
     };
 
-    vector<int> v = { 1,3,44,5,2,6,5,1 };
-    // list<int> l = { 3,5,8,90,45,6,7 };
-    //const int size = 7;
-    //int arr[size] = { 3,5,8,90,45,6,7 };
+    vector<int> v = { 3,3,2 };
     
-   auto el = minmax_element(v.begin(), v.end());
 
-   cout << *el.first << "\t" << *el.second << endl; //first -- минимальный, second -- максимальный
+    //auto result = accumulate(begin(v), end(v), 0); //можно использовать begin, end из stl
+    //auto result = accumulate(begin(v), end(v), 1, [](int a, int b) {return a * b; });//первый параметр -- сумма на текущий момент. второй - то что мы будем домножать
+    /*auto result = accumulate(begin(v), end(v), 0, [](int a, int b) {
+        if (b % 2 == 0) {
+            return a + b;
+        }
+        else return a;
 
+    }); */
 
-    
    
+
+    string result = accumulate(next(begin(v)), end(v), to_string(v[0]), [](string a, int b) { //
+        return a + "--" + to_string(b);
+    });
+    //точка отсчёта to_string(v[0]) -- первый элемент, приведённый к стринге, первый параметр предикаты уже строка. 
+    //так как начинали считать уже с первого элемента, используем next (сдвигает начало коллекции на 1 элемент)
+
+
+    cout << result << endl;
 
     return 0;
 }

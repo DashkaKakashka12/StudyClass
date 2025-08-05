@@ -7,9 +7,10 @@
 using namespace std;
 
 
-//accunulate -- сумма и произведение элементов массива. обязатлеьно подключить библиотеку numeric. третий параметр- значение к которому прибавится результат вычисления
-//стандартное поведение сложение.
-//для умножения четвёртым параметром предикат, в него передаём 2 параметра и перемножаем в return
+//equal -- возвращает логическое значение. 4 параметра: начало и конец обоих коллекций. сравнивает по индексам, если необходимо по значениям юз sort
+//mismath -- помимо проверки на неравенство возвращает пару элементов, первое несоответствие в коллекциях
+
+//можно сравнивать разные контейнеры
 
 class Person
 {
@@ -38,28 +39,17 @@ int main() {
     };
 
     vector<int> v = { 3,3,2 };
+    int arr[] = {3,3,2};
+    int arr2[] = {3,1,2,4,4};
+
+    //bool result = equal(begin(v), end(v), begin(arr), end(arr));
+
+    auto result = mismatch(begin(v), end(v), begin(arr), end(arr)); //
+    if (result.first == end(v) && result.second == end(arr)) {
+        cout << "+" << endl;
     
+    } else cout << "-" << endl;
 
-    //auto result = accumulate(begin(v), end(v), 0); //можно использовать begin, end из stl
-    //auto result = accumulate(begin(v), end(v), 1, [](int a, int b) {return a * b; });//первый параметр -- сумма на текущий момент. второй - то что мы будем домножать
-    /*auto result = accumulate(begin(v), end(v), 0, [](int a, int b) {
-        if (b % 2 == 0) {
-            return a + b;
-        }
-        else return a;
-
-    }); */
-
-   
-
-    string result = accumulate(next(begin(v)), end(v), to_string(v[0]), [](string a, int b) { //
-        return a + "--" + to_string(b);
-    });
-    //точка отсчёта to_string(v[0]) -- первый элемент, приведённый к стринге, первый параметр предикаты уже строка. 
-    //так как начинали считать уже с первого элемента, используем next (сдвигает начало коллекции на 1 элемент)
-
-
-    cout << result << endl;
-
+    
     return 0;
 }

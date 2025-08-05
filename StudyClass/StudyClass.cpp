@@ -1,55 +1,66 @@
 ﻿#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <list>
-#include <string>
-#include <numeric>
+#include <thread>
+#include <chrono>
+
+
 using namespace std;
 
+//
 
-//equal -- возвращает логическое значение. 4 параметра: начало и конец обоих коллекций. сравнивает по индексам, если необходимо по значениям юз sort
-//mismath -- помимо проверки на неравенство возвращает пару элементов, первое несоответствие в коллекциях
 
-//можно сравнивать разные контейнеры
-
-class Person
+class MyClass
 {
 public:
-    Person(string name, double score) {
-        this->Score = score;
-        this->Name = name;
+
+    void DoWork() {
+        this_thread::sleep_for(chrono::milliseconds(2000));
+        cout << "---DoWork START---" << endl;
+        this_thread::sleep_for(chrono::milliseconds(5000));
+        cout << "---DoWork STOP---" << endl;
     }
 
-    string Name;
-    double Score;
+    void DoWork2(int a) {
+        this_thread::sleep_for(chrono::milliseconds(2000));
+        cout << "---DoWork2 START---" << endl;
+        this_thread::sleep_for(chrono::milliseconds(5000));
+        cout << "DoWork2 значение параметра: "<< a << endl;
+        cout << "---DoWork2 STOP---" << endl;
+    }
+
+    int Sum(int a, int b) {
+
+        this_thread::sleep_for(chrono::milliseconds(3000));
+        cout << "---Sum START---" << endl;
+        this_thread::sleep_for(chrono::milliseconds(7000));
+        cout << "---Sum STOP---" << endl;
+
+        return a + b;
+    }
+
 
 };
+
+
 
 
 int main() {
     setlocale(LC_ALL, "RU");
 
-    vector<Person> people{
-        Person("Ваня", 150),
-        Person("Катя", 130),
-        Person("Сергей", 50),
-        Person("Арина", 10),
-        Person("Маша", 30),
-        Person("Даша", 200)
-    };
+    int result;
+    MyClass m;
 
-    vector<int> v = { 3,3,2 };
-    int arr[] = {3,3,2};
-    int arr2[] = {3,1,2,4,4};
+    //thread th([&]() {result = m.Sum(2, 3); }); //передача метода класса в поток(Sum и Dowork)
+    //thread th([&]() {&MyClass::DoWork, m; }); //для Dowork так как не нужен возврат результата
+    thread th(&MyClass::DoWork2, m, 5);
 
-    //bool result = equal(begin(v), end(v), begin(arr), end(arr));
+    for (size_t i = 0; i <= 10; i++)
+    {
+        cout << "ID: " << this_thread::get_id() << "\tmain\t" << i << endl;
+        this_thread::sleep_for(chrono::milliseconds(500)); //делает паузу благодаря библиотеке chrono в 1 сек
+    }
 
-    auto result = mismatch(begin(v), end(v), begin(arr), end(arr)); //
-    if (result.first == end(v) && result.second == end(arr)) {
-        cout << "+" << endl;
-    
-    } else cout << "-" << endl;
+    th.join();
+    //cout << "result: "<< result << endl;
 
-    
     return 0;
 }

@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SimpleTimer.cpp" />
     <ClCompile Include="StudyClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SimpleTimer.h" />
     <ClInclude Include="StudyClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,108 +1,70 @@
 ﻿#include <iostream>
-#include <thread>
-#include <chrono>
-#include <mutex>
-#include "SimpleTimer.h"
-
-
+#include <algorithm>
+#include <vector>
+#include <list>
+#include <string>
+#include <numeric>
 using namespace std;
 
-//mutex -- защита разделяемх данных -- пример со студентами и яишницей -- какой-то сигнал что ресурс занят другим потоком и его нельзя использовать
-//синхронизация потоков -- позволяет разделять выполнение потоков(дожидться выполнени одного перед выполнением другого)
-// m.lock и unlock окружают код который не может выполняться параллельно. код выполняется дольше т.к остальные потоки ожидают
 
+//equal -- возвращает логическое значение. 4 параметра: начало и конец обоих коллекций. сравнивает по индексам, если необходимо по значениям юз sort
+//
 
-class MyClass
+class Person
 {
 public:
-
-    void DoWork() {
-        this_thread::sleep_for(chrono::milliseconds(2000));
-        cout << "---DoWork START---" << endl;
-        this_thread::sleep_for(chrono::milliseconds(5000));
-        cout << "---DoWork STOP---" << endl;
+    Person(string name, double score) {
+        this->Score = score;
+        this->Name = name;
     }
 
-    void DoWork2(int a) {
-        this_thread::sleep_for(chrono::milliseconds(2000));
-        cout << "---DoWork2 START---" << endl;
-        this_thread::sleep_for(chrono::milliseconds(5000));
-        cout << "DoWork2 значение параметра: "<< a << endl;
-        cout << "---DoWork2 STOP---" << endl;
-    }
-
-    int Sum(int a, int b) {
-
-        this_thread::sleep_for(chrono::milliseconds(3000));
-        cout << "---Sum START---" << endl;
-        this_thread::sleep_for(chrono::milliseconds(7000));
-        cout << "---Sum STOP---" << endl;
-
-        return a + b;
-    }
-
+    string Name;
+    double Score;
 
 };
 
-mutex m;
+class Point {
+public:
 
-void Print(char ch) {
-    m.lock();
-    for (int i = 0; i < 5; i++)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            cout << ch;
-            this_thread::sleep_for(chrono::milliseconds(20));
-        }
-        cout << endl;
+    Point(int x, int y) {
+        this->x = x;
+        this->y = y;
     }
-    cout << endl;
-    m.unlock();
-}
+
+    int x, y;
+};
 
 int main() {
     setlocale(LC_ALL, "RU");
 
-    SimpleTimer t;
-    thread first(Print, '*');
-    thread second(Print, '#');
+    vector<Person> people{
+        Person("Ваня", 150),
+        Person("Катя", 130),
+        Person("Сергей", 50),
+        Person("Арина", 10),
+        Person("Маша", 30),
+        Person("Даша", 200)
+    };
 
-    first.join();
-    second.join();
-    //for (size_t i = 0; i <= 10; i++)
-    //{
-    //    cout << "ID: " << this_thread::get_id() << "\tmain\t" << i << endl;
-    //    this_thread::sleep_for(chrono::milliseconds(500)); //делает паузу благодаря библиотеке chrono в 1 сек
-    //}
+    vector<Point> arr { 
+        Point(1,3),
+        Point(4,5),
+        Point(5,7),
+    };
 
+    vector<Point> arr2 {
+        Point(1,3),
+        Point(3,5),
+        Point(5,7),
+    };
    
+
+    bool result = equal(begin(arr), end(arr), begin(arr2), end(arr2), [](const Point& p1, const Point& p2) {
+        return p1.x == p2.x && p1.y == p2.y;}
+    );
+
+    cout << result << endl;
+
 
     return 0;
 }
-
-/* for (int i = 0; i < 5; i++)
-    {
-
-        if (i == 0 || i == 4) {
-            for (int i = 0; i < 10; i++)
-            {
-                cout << ch;
-                this_thread::sleep_for(chrono::milliseconds(20));
-            }
-            cout << endl;
-        }
-        else {
-            for (int i = 0; i < 2; i++)
-            {
-                cout << ch;
-                for (int i = 0; i < 8; i++)
-                {
-                    cout << " ";
-                    this_thread::sleep_for(chrono::milliseconds(20));
-                }
-            }
-            cout << endl;
-        }
-        
-    }*/

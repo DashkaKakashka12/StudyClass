@@ -7,8 +7,13 @@
 
 using namespace std;
 
-//mutex, lock_quard -- класс, задача которго при создании объектазахватить mutex в конструкторе и освободить при удалении в деструкторе
-//с помощью {} ограничивается облась видимости lock_quard. lock_quard захватывает в контект всё что после него по умолчанию
+//deadlock -- взаимная блокировка. 
+//если оба потока пытаются вызвать одну и туже функцию вместе, то обе ожидают её выполнения( из-зи mutex и задержки), ничего не работает
+//надо поменять порядок мьютексов чтобы он был одинаковым и тогда оба потока будут получать доступ к функции только если она свободна 
+
+mutex m1;
+mutex m2;
+
 
 class MyClass
 {
@@ -42,30 +47,57 @@ public:
 
 };
 
-mutex m;
+void Print() {
 
-void Print(char ch) {
-    {
-        lock_guard<mutex> guard(m);
-        for (int i = 0; i < 5; i++)
+    m1.lock();   
+    this_thread::sleep_for(chrono::milliseconds(1));
+    m2.lock();
+
+    for (int i = 0; i < 5; i++)
         {
             for (int i = 0; i < 10; i++)
             {
-                cout << ch;
-                this_thread::sleep_for(chrono::milliseconds(20));
+                cout << "*";
+                this_thread::sleep_for(chrono::milliseconds(10));
             }
             cout << endl;
         }
+       cout << endl;
+
+       m2.unlock();
+       m1.unlock();
+}
+
+
+void Print2 (){
+    
+
+   m1.lock();
+   this_thread::sleep_for(chrono::milliseconds(1));
+   m2.lock();
+
+   for (int i = 0; i < 5; i++)
+   {
+       for (int i = 0; i < 10; i++)
+       {
+            cout << "#";
+            this_thread::sleep_for(chrono::milliseconds(20));
+       }
         cout << endl;
-    }
+   }
+   cout << endl;
+
+   m2.unlock();
+   m1.unlock();
 }
 
 int main() {
     setlocale(LC_ALL, "RU");
 
     SimpleTimer t;
-    thread first(Print, '*');
-    thread second(Print, '#');
+
+    thread first(Print);
+    thread second(Print2);
 
     first.join();
     second.join();

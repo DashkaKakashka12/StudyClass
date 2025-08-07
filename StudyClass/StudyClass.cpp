@@ -7,13 +7,12 @@
 
 using namespace std;
 
-//deadlock -- взаимная блокировка. 
-//если оба потока пытаются вызвать одну и туже функцию вместе, то обе ожидают её выполнения( из-зи mutex и задержки), ничего не работает
-//надо поменять порядок мьютексов чтобы он был одинаковым и тогда оба потока будут получать доступ к функции только если она свободна 
+//recursive_mutex -- для рекурсивной функции и если нужно несколько раз вызвать mutex. объявляется как обычный глобально.
+//освобождать надо столько же раз сколько мы его вызвали.
+//в рекурсии при повторном вызове функции вызывается один и тот же mutex, поэтому его нельзя использовать, нужно recursive_mutex
 
-mutex m1;
-mutex m2;
-
+mutex m;
+recursive_mutex rm;
 
 class MyClass
 {
@@ -48,10 +47,9 @@ public:
 };
 
 void Print() {
-
-    m1.lock();   
+   
     this_thread::sleep_for(chrono::milliseconds(1));
-    m2.lock();
+    
 
     for (int i = 0; i < 5; i++)
         {
@@ -64,17 +62,12 @@ void Print() {
         }
        cout << endl;
 
-       m2.unlock();
-       m1.unlock();
 }
-
 
 void Print2 (){
     
-
-   m1.lock();
    this_thread::sleep_for(chrono::milliseconds(1));
-   m2.lock();
+  
 
    for (int i = 0; i < 5; i++)
    {
@@ -87,20 +80,37 @@ void Print2 (){
    }
    cout << endl;
 
-   m2.unlock();
-   m1.unlock();
 }
+
+void Foo(int a) {
+    rm.lock();
+    cout << a << " ";
+    this_thread::sleep_for(chrono::milliseconds(300));
+    if (a <= 1) {
+        cout << endl;
+        rm.unlock();
+        return; //если a = 1, то дальше код не выполниться, поэтому надо и в цикле m.unlock()
+    }
+    a--;
+    Foo(a);
+    rm.unlock();
+}
+
 
 int main() {
     setlocale(LC_ALL, "RU");
 
-    SimpleTimer t;
+    //SimpleTimer t;
 
-    thread first(Print);
-    thread second(Print2);
+    //Foo(10);
+    //rm.lock();
 
-    first.join();
-    second.join();
+    thread t1(Foo, 10);
+    thread t2(Foo, 10);
+
+    t1.join();
+    t2.join();
+
 
     //for (size_t i = 0; i <= 10; i++)
     //{

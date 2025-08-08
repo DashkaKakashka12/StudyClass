@@ -4,31 +4,31 @@
 
 using namespace std;
 
-//алгоритм unique -- для удаления повторяющихся элементов. как remove, не удаляет а преносит элементы в конец не меняя кол-ва элементов коллекции
-//для вывода эл-тов до границы используем for_each, для удаления ненужных элементов используем erase(result, v.end())
+//алгоритм random_shuffle -- располагает элементы в рандомном порядке
+//для генерации уникальных порядков использовать random_shuffle
 
-//uniqu_copy -- позволяет скопировать уникальные элементы в новый контецнер
-//не обязательно чтобы два контейнер абыли одинаковы для uniqu_copy, важен тип данных
+
+//позволяет выполнить переопределённый метод наследников класса в рандомном порядке
 
 
 
 int main() {
     setlocale(LC_ALL, "RU");
+    srand(time(NULL));
 
-    vector<int> arr = {1,2,7,4,4,7,8,1};
-    vector<int> arr2;
+    int arr[] = {1,2,3, 4,5};
 
     for (auto el : arr) {
         cout << el << " ";
     }
 
     cout << endl;
-    //auto result = unique(begin(arr), end(arr));
-    auto result = unique_copy(begin(arr), end(arr), back_inserter(arr2));
-    for_each(begin(arr2), end(arr2), [](int a) {cout << a << " ";});
-    //for_each(begin(arr), result, [](int a) {cout << a << " ";});
-    
-   
 
+    random_shuffle(begin(arr), end(arr));
+   
+    for (auto el : arr) {
+        cout << el << " ";
+    }
+    
     return 0;
 }
